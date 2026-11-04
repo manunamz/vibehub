@@ -62,8 +62,11 @@ const userSlug = () => (curUser || 'user').toLowerCase().trim().replace(/[^a-z0-
 // link to the user's profile (home), and to a repo under it
 const homeLink = () => '/' + userSlug();
 const rlink = (repo) => homeLink() + '/' + esc(repo) + (curBranch === 'main' ? '' : '@' + encodeURIComponent(curBranch));
-// clean-path navigation: push a new URL and re-render (no full page reload)
-function navigate(path) { history.pushState(null, '', path); render(); }
+// clean-path navigation: push a new URL and re-render (no full page reload).
+// Reset to the top like a real page load would — otherwise the previous page's
+// scroll offset carries over and a freshly opened page looks nudged downward.
+// Back/forward (popstate) keeps the browser's native scroll restoration.
+function navigate(path) { history.pushState(null, '', path); window.scrollTo(0, 0); render(); }
 const bq = (p) => p + (p.includes('?') ? '&' : '?') + 'branch=' + encodeURIComponent(curBranch);
 
 // git-commit mark: empty circle, line stub either side
