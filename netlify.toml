@@ -1,0 +1,12 @@
+# Deploy config for the `net` branch. The static build stands up a demo-mode
+# server (which seeds ./data-demo from the committed ./demo bundles), snapshots
+# it to ./dist, and shuts it down. See build-site.js.
+[build]
+  command = "npm run build:site"
+  publish = "dist"
+
+[build.environment]
+  # Pin Node ≥18 — the build uses fs.cpSync, global fetch, and node:test.
+  NODE_VERSION = "20"
+  # Where the demo's read-only "clone this to run it for real" modal points.
+  VIBEHUB_REPO_URL = "https://github.com/manunamz/vibehub"
