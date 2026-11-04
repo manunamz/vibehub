@@ -1,0 +1,48 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll look at the existing app first, then restyle it.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/recipe-box/worktrees/feat/neon/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/worktrees/feat/neon/code/index.html
+The app is restyled as neon cyberpunk, with all functionality untouched. The entire change lives in the `<style>` block of `index.html` — every class name, ID, and line of JavaScript is exactly as before, so the add form, search, tag filtering, recipe modal, delete, localStorage persistence, dinner spinner, and confetti all work identically.
+
+What the new theme does:
+
+- **Near-black background** (`#07070e`) with faint magenta and cyan radial glows, and dark translucent panels with glowing borders — cyan-edged panels for the recipe box, magenta-edged for the spinner hero and modal.
+- **Glowing magenta/cyan accents**: the spin button is a hot-magenta glow block, the primary button is glowing cyan, tags are neon-outlined pills, focused inputs glow magenta, and recipe cards alternate cyan/magenta/violet edge lights that intensify on hover.
+- **Monospace headings** throughout (`Courier New`/ui-monospace), uppercase with letter-spacing and neon text-shadow; the main title also has a subtle CRT flicker animation.
+- **Scanline texture** via a fixed `body::after` overlay of 1px repeating dark lines with `pointer-events: none`, so it sits over everything (including the modal, for a true CRT feel) without blocking any clicks.
+- The old gingham top border is now a thin magenta→violet→cyan gradient strip with a neon glow, and the falling ingredient confetti picks up a cyan drop-shadow.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/recipe-box/worktrees/feat/neon/code/index.html
+Build a recipe box app where users paste and organize recipes with tags, then spin a button to get random dinner suggestions.
+
+**Recipe Input**: A form to add recipes by pasting text (ingredients, steps, links, notes). Users enter a recipe name or it auto-guesses from the first non-empty line of pasted text. Tags are comma-separated (e.g., "weeknight, soup, vegetarian"). Recipes save to localStorage automatically.
+
+**Recipe Display**: Cards in a scrollable list showing recipe name, 2-line text preview, and tag chips. Clicking any card opens a modal with the full recipe text, all tags, and a delete button. Seed the app on first visit with two starter recipes (One-Pot Tomato Orzo and Lazy Sunday Chicken Soup).
+
+**Tag Cloud & Filtering**: Display all tags with recipe counts. Users can click tags to filter (AND logic—selecting "soup" and "weeknight" shows only recipes with both). A search box filters by recipe name, text content, or tags. Show a "Clear" button when filters are active. Display a count line ("3 recipes in the box" or "Showing 2 of 5").
+
+**The Spinner Hero**: A "Spin for Dinner!" button with a 🥘 icon in a prominent hero section. Clicking it picks a random recipe from the filtered list (or all recipes if no filters). The button animates through recipe names with easing-out delays, then reveals the winner in a card with a "peek at the recipe" link and confetti (🧄 🧅 🥕 🌿 🧂 🍅 ✨) falling.
+
+**Neon Cyberpunk Design**:
+- **Background**: Near-black void (#07070e, #0d0d1a layers) with subtle radial gradients (magenta/cyan glow at edges)
+- **Colors**: Neon magenta (#ff2ec4), cyan (#00f0ff), violet (#8a5cff), soft gray text (#d8e0f0)
+- **Typography**: Monospace (Courier New) for headings/labels, sans-serif for body
+- **Effects**: Glowing text-shadows on titles, neon box-shadows around panels, CRT scanline texture overlay (subtle repeating horizontal lines)
+- **Accents**: Neon top strip (magenta-violet-cyan gradient with heavy glow), glowing borders on input fields and cards
+- **Interactive**: Buttons glow brighter on hover, cards have colored left borders (cyan/magenta/violet alternating)
+- **Animations**: Title flickers subtly, spinner button rotates continuously while spinning, winner card pops with overshoot easing, confetti falls with rotation
+
+**Technical Details**:
+- Single-file HTML/CSS/JS app (no build step)
+- localStorage for persistence (key: "recipe-box-v1")
+- Vanilla JS (no frameworks)
+- Graceful empty states with helpful emoji & text
+- Modal overlay with ESC-to-close and click-outside-to-close
+- Responsive design for mobile and desktop (two-column layout becomes single column on mobile)
+[distiller] finished (success)

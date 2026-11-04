@@ -1,0 +1,69 @@
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-4-8)
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+[Glob] **/*.html
+[Read] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+I have both files. Now I'll replace the CSS-shape capybara with a faithful inline SVG matching the canonical artwork. First, removing the now-unused CSS-shape rules:
+[Edit] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+Now replace the HTML capybara markup with the inline SVG, keeping the yuzu and steam:
+[Edit] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+Done. I replaced the CSS-shape capybara with a faithful inline SVG avatar that matches the canonical `vibybara-spring.svg`:
+
+- **Proportions & palette** — a single rounded light-brown loaf (`#d58d59`) with canon shading (`#b5693d`) and highlight (`#e0a571`), clipped to the silhouette so nothing spills.
+- **Muzzle patch** — a darker blunt patch (`#b06a3f`) running down the front of the face, carrying the nostrils and mouth.
+- **Small dark ears** peeking above the head, **serene sleepy eyes** drawn as gentle closed arcs, and **soft blush**.
+- **Dark over-ear headphones** — black band with a grey inner stripe, layered earcups (`#1e0c0b` / `#3a3a3c` / `#2a2a2c` with the gold `#c9a24a` ring and dashed inner circle), and the **yellow lightning bolt** (`#ffd23f`, dark outline) on the right earcup — all lifted straight from the canon artwork.
+
+Everything else — the floating yuzu, hot-spring steam, bob animation, copy, theme toggle, and layout — is untouched. The existing `aria-label` on the `.capy` container still describes the scene; the SVG is marked `aria-hidden`.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current app state and the reference SVG to write an accurate distilled prompt.
+[Read] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+Build a single-page personal homepage for Vibybara, a capybara software shipper. Create an `index.html` file with pure HTML/CSS (no framework) featuring:
+
+**Theme toggle** (fixed top-right):
+- 48px circular button with 2px border, moon emoji (🌙) by default, sun emoji (☀️) in dark mode
+- Scales up on hover (1.1×), rotates 12°, shadow matches page shadow
+- Stores theme choice in localStorage as "vibybara-theme"; detects system preference if not saved
+- Reads saved theme before paint to prevent flash
+
+**CSS theme system**:
+- Light (default): soft palette—beiges (#fdf6ec, #faeedd), browns (#8a6246, #5f4330), tan fur (#c49a6c), accent orange (#e8a87c)
+- Dark: inverted warm grays and muted gold; same structure, adjusted opacity/lightness
+- CSS variables for all colors; 0.3s transitions on theme switch
+
+**Hero section** (centered, soft radial gradient background):
+- Inline SVG capybara avatar (~190px) with proper anatomy: rounded light-brown body (#d58d59), darker blunt muzzle patch down the front of the face (#b06a3f), small dark ears (#5b3c33), serene sleepy eyes (gentle closed arcs), soft blush, nostrils and mouth on muzzle
+- Dark over-ear headphones (#1e0c0b / #4a4a4c) with yellow lightning bolt on right earcup (#ffd23f)
+- Yellow gradient yuzu fruit floating beside capy with small green leaf
+- Two animated steam wisps rising (hot-spring vibes)
+- Bobbing animation on capy; yuzu bobs in reverse; steam rises continuously
+- Heading: "Vibybara"; italicized tagline: "i commit the vibes"; subheading about the character
+
+**About section** (4 fact cards):
+- Each card has emoji, text, hover lift (6px)
+- Facts: hot springs & code quality, headphones/lo-fi beats, yuzu balancing, 47 projects shipped (never typed code)
+
+**/now section** (what Vibybara is up to lately):
+- Subheading `/now`; small muted note ("last updated november 2026, from the hot spring")
+- List of 5 items with emoji, description, inline status badge (small pill: soaking, mixing, training, vibing, ongoing)
+- Cards: green left border, 22px radius, 6px hover lift, card background with shadow
+- Status badge: 0.72rem font, letter-spaced, orange background, dark text, 2px 10px padding, 999px border-radius
+
+**Projects section** (4-column responsive grid):
+- Cards: HackTube, recipe-box, pomodoro, neon-snake
+- Each shows emoji + title, one-line description, "vibed, not typed" tag
+- Hover: 5px lift, accent-soft border, enhanced shadow
+
+**Footer**:
+- Paw emoji (🐾), "built on VibeHub — no code was typed"
+
+**Design**:
+- All corners rounded (22px base); responsive max-width 880px
+- System sans-serif, responsive font sizes with clamp()
+- Smooth transitions (0.25s) on hover; subtle drop shadows
+- Smooth scrolling; SVG capybara with canonical proportions and features
+[distiller] finished (success)

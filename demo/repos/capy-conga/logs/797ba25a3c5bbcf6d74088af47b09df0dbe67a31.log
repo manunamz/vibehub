@@ -1,0 +1,106 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll start by reading the current game code and the reference 3D implementation.
+[Glob] **/*
+[Glob] /Users/vibybara/vibehub/data/repos/snake-game/code
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/snake-game/code/snake-logic.js
+I have the current game and the reference's logic model. Let me quickly check how the reference handles 3D steering/camera before writing the new mode.
+[Grep] /Users/vibybara/vibehub/data/repos/snake-game/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now the game-logic changes — constants, dimensions helper, mode switching, reset, food/power-up placement:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now the input system (rise/dive keys, z-aware direction queue) and the game step:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now the z-aware step function, particles, and the trail:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now startGame (hint display), the wheel zoom clamp, and the renderer split — the old `render3D` becomes 2.5D-only, and I'll add the new volumetric renderer:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now the renderer changes — the 2.5D renderer keeps its fixed tilt, and the new volumetric renderer replaces 3D:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now let me verify there are no leftover references to removed functions and double-check the key sections:
+[Grep] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Grep] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+`rm.headH` at line 1173 is inside `render25D` which still uses `RM25` — that's correct. Let me do a final syntax sanity pass over the edited input handler and the renderVol/render boundary:
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Everything checks out. The implementation is complete.
+
+## Summary
+
+3D mode is now true volumetric 3D — the snake traverses a full 10×10×10 cube with real rise/dive moves, matching the movement and collision model of the original snake-game (`snake-logic.js`: unit-axis directions on x/y/z, no 180° reversals, tail-cell-safe-unless-growing, walls on all six faces). 2D and 2.5D are untouched — they still play on the classic 20×20 board with their original renderers.
+
+**Gameplay in the volume**
+- Every cell now carries a `z` layer. In 3D mode `dims()` returns a 10³ cube; food, power-ups, and free-cell lookups span the whole volume, and wall/self collisions check all three axes.
+- Controls: arrows/WASD steer camera-relative on the current plane (as before), and **Q/Space rise, E/Shift dive** — real queued moves that obey the same no-180/no-dupe rules. A control-hint banner appears at the top of the frame when a 3D run starts and fades after ~5 seconds.
+- Since the cube and the flat board are different worlds, switching between 3D and 2D/2.5D mid-run starts a fresh run in the new world (2D↔2.5D still switches live); the start-screen hint says so.
+
+**Rendering the cube**
+- Neon wireframe cage with a soft grid floor, drawn with the existing projection math; all 12 edges, the snake cubes, trail, food, power-ups, and particles go through one back-to-front depth sort, and brightness fades with camera distance.
+- Depth cues: soft glowing floor shadows under every segment/food/power-up (fainter the higher the object), faint vertical drop-lines tying floaters to their shadows, a pulsing green ring around the cage at the head's layer, plus a "LAYER n/10" readout and an elevation gauge on the right edge.
+- Camera: gentle auto-orbit (pauses while you drag), drag-to-orbit and scroll-to-zoom kept, with zoom limits retuned for the cube. Billboarded eyes now work for vertical travel too.
+
+**All the juice survives in the volume**: glowing shrinking trail cubes, screen shake and red death-flash on crash, yuzu/star power-ups spawning anywhere in 3D with HUD countdowns, particles that bounce off the cube floor, pause overlay (now listing rise/dive keys), and the shared hi-score.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current code to ground the distilled prompt in what's actually implemented.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic in a single HTML file. The game offers three distinct render modes switchable via 1/2/3 keys or start-screen buttons.
+
+**Core Gameplay:**
+- **2D/2.5D:** 20×20 grid, 24px cells; **3D:** 10×10×10 volumetric cube
+- Snake starts centered with 3 segments facing right; input buffer for up to 2 queued moves (prevents 180° turns and duplicates)
+- Arrow keys/WASD control movement; in 3D, these are camera-relative; Q/Space rise through z-axis, E/Shift dive (real vertical moves)
+- Food spawns randomly in 3D space; collision adds 1 segment, scores 10 points
+- Speed: start 150ms per move, subtract 4ms per food (min 55ms); slow-mo multiplies by 1.8× when active
+- Death on wall/self collision (tail safe if growing); screen shake on death (420ms decay, ±10px)
+
+**Three Render Modes:**
+- **2D:** Classic flat neon board with glowing cyan border, faint grid, snake head cyan with eyes, body fades green, food pulsing pink diamond, 32% opacity trail clearing
+- **2.5D:** Same 20×20 board through fixed perspective tilt + depth shading (farther = darker); arena has glowing cyan rim, depth-sorted rendering
+- **3D:** Full volumetric cube; snake lives in N×N×N space (N=10); orbitable camera (drag to rotate, scroll to zoom); wireframe cyan cage, floor shadows, pulsing ring marks current layer, elevation gauge (right side), layer readout (bottom-left); gentle auto-orbit when not dragging; depth cues: segments scale/fade with distance
+- Mode selection on start screen; switchable anytime via 1/2/3 keys; switching 3D mid-run restarts; one persistent high score across all modes; remember last-used mode in localStorage
+
+**Power-Ups (all modes, 3D space):**
+- Yuzu Berry (yellow orb with green leaf): slow-mo (1.8×) for 6 seconds
+- Ghost Star (5-point white star, cyan glow): phase through self for 6 seconds
+- Spawn every 6–13 seconds, exist 9 seconds, blink when <1.5s remain; spawn randomly in free 3D cells
+- Power-up HUD badges (center) with countdown timers (0.0s format), blink near expiry
+- Particle bursts (14 pink/yellow particles) on grab; world-space physics with bounce
+
+**Visual Style:**
+- Dark background (#05050a); Press Start 2P font
+- Neon palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- Ghost mode: head white, body cyan, reduced opacity with shimmer
+- CRT scanlines overlay (3px dark lines) across entire page
+- All modes: glowing effects via shadowBlur, depth-sorted particle/trail/entity rendering
+
+**Effects & Audio:**
+- Death animation: 650ms flashing red/white segments, descending beep (220→140→80Hz sawtooth)
+- Food eat: ascending pitch beep (880Hz + min(score, 400))
+- Power-up grab: ascending triple beep for star (740→990→1240 Hz), double for yuzu (520/390 Hz)
+- Start: 660Hz, 880Hz beeps
+
+**UI & States:**
+- States: start, playing, paused, dying (650ms), gameover
+- HUD: score (green glow, left), power badges (center), hi-score (pink glow, right); mode tag (bottom-right)
+- Start screen: pulsing "NEON SNAKE" title, mode selector buttons, "INSERT COIN" button (yellow, blinking)
+- Pause screen: "PAUSED" title, power-up hints, "PRESS P TO RESUME"
+- Game Over: final/best scores, "NEW HI-SCORE" if applicable
+- Space/Enter starts from start/game-over; arrow/WASD auto-starts; P toggles pause
+[distiller] finished (success)

@@ -1,0 +1,52 @@
+{
+  "ce983f020d172d953853229ad8f99a275dd78b74": {
+    "vibeSha": "ce983f020d172d953853229ad8f99a275dd78b74",
+    "file": "vibes/0001.md",
+    "prompt": "Create a market scanner that discovers markets and products of interest to capybaras.",
+    "plan": "- Define capybara product categories (food, habitat, enrichment items, etc.)\n- Build a scanner to crawl markets and product databases\n- Filter results by capybara relevance\n- Display or export matched markets and products",
+    "branch": "main",
+    "ramble": "create a market scanner which scans markets and products of interest to a capybara.",
+    "state": "done",
+    "createdAt": 1793653512546,
+    "startedAt": 1793653512547,
+    "codeCommit": "eafe9af6867828041bf946946e71d107e3506c19",
+    "summary": "The app is built. Since the directory was empty, I created a single self-contained `index.html` — the BaraMarket Capybara Market Scanner — which covers all four plan items:\n\n- **Capybara product categories**: six interest categories are defined (Food & Forage, Habitat & Shelter, Aquatic & Swimming, Enrichment & Play, Grooming & Wellness, Social & Companionship), each with weighted relevance keywords, plus anti-keywords (cages, predators, electronics) that penalize a listing's score.\n- **Scanner**: pressing START SCAN runs an animated async crawl over seven built-in market feeds (Pantanal Wholesale Exchange, Izu Onsen Supply Co., Rodent Republic Online, etc. — 35 listings total), with a live console log, progress bar, and running stats for markets scanned, listings crawled, and matches found.\n- **Relevance filtering**: each listing gets a 0–100% capy score from the keyword engine; a configurable threshold (30/50/70/90%) decides what counts as a match, and after the scan you can further filter by category chips or free-text search (e.g. \"melon\", \"pool\").\n- **Display & export**: matches render as per-market cards with product tables showing category, price, score pill, and the keywords that matched; the current filtered view can be downloaded as JSON or CSV.\n\nOpening `index.html` in a browser is all that's needed to preview it — no build step or dependencies.",
+    "agentModel": "claude-fable-5",
+    "finishedAt": 1793653636821,
+    "distill": "done",
+    "distillSha": "c069996c192f03bd056143194c66c6767b0c58d7"
+  },
+  "e14d100e9822d33b45ddf62ddec1f3cafb7b4033": {
+    "vibeSha": "e14d100e9822d33b45ddf62ddec1f3cafb7b4033",
+    "file": "vibes/0002.md",
+    "prompt": "Replace hardcoded feeds with live client-side fetches from Polymarket's public API (gamma-api.polymarket.com), with graceful fallback to sample data when offline while clearly labeling it as synthetic.",
+    "plan": "- Set up client-side API calls to gamma-api.polymarket.com instead of serving static data\n- Implement offline detection and fallback to sample data\n- Add a clear label/badge when displaying offline/synthetic data\n- Keep sample data fixtures for development and offline use",
+    "branch": "main",
+    "ramble": "replace the hardcoded feeds with live client-side fetches from Polymarket's public API (gamma-api.polymarket.com), falling back to the sample data when offline (but clearly label if using offline synthetic data).",
+    "state": "done",
+    "createdAt": 1793661679912,
+    "startedAt": 1793661679913,
+    "codeCommit": "e225cb2e9abf42498a9b6c688a06326fbaef0e17",
+    "summary": "The scanner now pulls live Polymarket data instead of hardcoded feeds. Here's what changed in `index.html`:\n\n**Live API integration.** Pressing START SCAN now does a client-side `fetch` to `https://gamma-api.polymarket.com/events?limit=75&active=true&closed=false&order=volume24hr&ascending=false` (the Gamma API serves CORS-enabled JSON, so this works from a static page). The response is grouped by event tag into up to 8 \"feeds\" of up to 6 markets each, sorted by 24-hour volume. Each listing carries the market question, resolution description, the YES price in cents (parsed from `outcomePrices`), and 24h volume.\n\n**Graceful fallback.** The scan falls back to bundled fixtures when `navigator.onLine` is false (it skips the network call entirely), or when the fetch fails — timeout after 10 seconds via `AbortController`, non-200 status, empty, or unparseable response. The fixtures (`SAMPLE_EVENTS`) are shaped exactly like the Gamma `/events` payload, so live and offline data flow through the same grouping/scoring/rendering pipeline. `online`/`offline` browser events also log hints to the scanner console.\n\n**Clear synthetic labeling**, in five places: a header badge that reads \"⚠ synthetic sample data\" (vs. a green \"● live · gamma-api.polymarket.com\" on success), a red warning banner explaining the data is made up and a rescan retries the live feed, a \"⚠ SYNTHETIC\" pill on every result card, warn-colored console lines during fallback, and `synthetic`/`data_source` fields in the JSON and CSV exports.\n\n**Scoring adapted to real data.** The old capy keywords (melon, hay, pool) would score every real Polymarket question at 0%, so the interest model was retuned to prediction-market topics while keeping the capybara theme — 🗳️ Herd Politics, 🪙 Capycoin & Crypto, 🏆 Splash Sports, 📈 Forage Economy, 🚀 Curious Snout (Sci & Tech), 🎬 Watering Hole Gossip. Keywords now match on word boundaries (so \"ai\" doesn't match \"rain\"), and a small volume bonus rewards busy markets. Category chips, threshold filter, search, and exports all work unchanged against both live and sample data.",
+    "agentModel": "claude-fable-5",
+    "finishedAt": 1793661953428,
+    "distill": "done",
+    "distillSha": "7263ba79958222450a74436fd7890e80fdda3f2a"
+  },
+  "0e88c4da1a05ce6787228def5a8cc7ca4c081431": {
+    "vibeSha": "0e88c4da1a05ce6787228def5a8cc7ca4c081431",
+    "file": "vibes/0003.md",
+    "prompt": "If any artwork or branding in this app depicts a capybara, update it to match Vibybara's canonical look. Everything else — markets, listings, scan behavior — stays exactly as is.",
+    "plan": "## Reference\nThe canonical Vibybara artwork is at /Users/vibybara/vibehub/public/vibybara-spring.svg — READ it for the exact look and palette, but only create/edit files in the current directory. Vibybara canon: rounded light-brown capybara, darker blunt muzzle patch down the front of the face, small dark ears, serene sleepy eyes, dark over-ear headphones with a yellow lightning bolt on the earcup, soft blush.",
+    "branch": "main",
+    "state": "done",
+    "createdAt": 1793689040075,
+    "startedAt": 1793689040076,
+    "codeCommit": "1b85c2328446e9c67f0b01ff33ef72ccba3308d0",
+    "summary": "Done. The only capybara artwork in the app was the header logo — a `🐹` emoji standing in for a capybara. I replaced it with an inline SVG drawn to Vibybara canon:\n\n- **Rounded light-brown head** (`#d58d59`) with a soft top highlight (`#e0a571`)\n- **Darker blunt muzzle patch** (`#704939`) running down the front of the face, with nostrils\n- **Small dark ears** (`#220c0d`) peeking above the head\n- **Serene sleepy eyes** (gentle downward lid arcs)\n- **Soft blush** on both cheeks\n- **Dark over-ear headphones** — band plus two earcups with the gold accent ring (`#c9a24a`) and a **yellow lightning bolt** (`#ffd23f`) on each cup\n\nPalette is pulled straight from `vibybara-spring.svg`. The `.logo` CSS now sizes the SVG (54×54) instead of a font glyph. Everything else — markets, listings, scan behavior, scoring, exports, the `🔍`/`🙈` state icons and category emoji (none of which depict a capybara) — is untouched.",
+    "agentModel": "claude-opus-4-8",
+    "finishedAt": 1793689149013,
+    "distill": "done",
+    "distillSha": "66ee5f3f04c5be77557c530934e99f9d30f622ae"
+  }
+}

@@ -1,0 +1,70 @@
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-4-8)
+[Glob] **/*.html
+[Grep] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+Done. Updated the projects grid to the current 6-project roster:
+
+- **HackTube** 📺 — reframed around "a single pasted prompt"
+- **recipe-box** 🥘 — now "neon capybara cuisine, born from a ramble"
+- **CAPYDORO** 🍊 — renamed from `pomodoro`, emoji 🍅→🍊, the onsen focus timer
+- **CAPY CONGA** 🐍 — renamed from `neon-snake`, now a 2D/2.5D/3D conga line
+- **CapyMart** 🛍 — new, lifestyle storefront
+- **baramarket** 📈 — new, polymarket for capys
+
+I kept the `.project` card markup, the `vibed, not typed` tags, the `.grid` layout, and everything else on the page untouched — only names, emoji, and one-liners changed. The two new cards reuse the same structure so the grid flows into a third row automatically.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Read] /Users/vibybara/vibehub/data/repos/vibybara.dev/code/index.html
+Build a single-page personal homepage for Vibybara, a capybara software shipper. Create an `index.html` file with pure HTML/CSS (no framework) featuring:
+
+**Theme toggle** (fixed top-right):
+- 48px circular button with 2px border, moon emoji (🌙) by default, sun emoji (☀️) in dark mode
+- Scales up on hover (1.1×), rotates 12°, shadow matches page shadow
+- Stores theme choice in localStorage as "vibybara-theme"; detects system preference if not saved
+- Reads saved theme before paint to prevent flash
+
+**CSS theme system**:
+- Light (default): soft palette—beiges (#fdf6ec, #faeedd), browns (#8a6246, #5f4330), tan fur (#c49a6c), accent orange (#e8a87c)
+- Dark: inverted warm grays and muted gold; same structure, adjusted opacity/lightness
+- CSS variables for all colors; 0.3s transitions on theme switch
+
+**Hero section** (centered, soft radial gradient background):
+- Inline SVG capybara avatar (~190px) with proper anatomy: rounded light-brown body (#d58d59), darker blunt muzzle patch down the front of the face (#b06a3f), small dark ears (#5b3c33), serene sleepy eyes (gentle closed arcs), soft blush, nostrils and mouth on muzzle
+- Dark over-ear headphones (#1e0c0b / #4a4a4c) with yellow lightning bolt on right earcup (#ffd23f)
+- Yellow gradient yuzu fruit floating beside capy with small green leaf
+- Two animated steam wisps rising (hot-spring vibes)
+- Bobbing animation on capy; yuzu bobs in reverse; steam rises continuously
+- Heading: "Vibybara"; italicized tagline: "i commit the vibes"; subheading about the character
+
+**About section** (4 fact cards):
+- Each card has emoji, text, hover lift (6px)
+- Facts: hot springs & code quality, headphones/lo-fi beats, yuzu balancing, 47 projects shipped (never typed code)
+
+**/now section** (what Vibybara is up to lately):
+- Subheading `/now`; small muted note ("what vibybara is up to lately — last updated november 2026, from the hot spring")
+- List of 5 items with emoji, description, inline status badge (small pill: soaking, mixing, training, vibing, ongoing)
+- Cards: green left border, 22px radius, 6px hover lift, card background with shadow
+- Status badge: 0.72rem font, letter-spaced, orange background, dark text, 2px 10px padding, 999px border-radius
+
+**Projects section** (6-column responsive grid):
+- 📺 HackTube — a whole video platform grown from a single pasted prompt. watch others code while you soak.
+- 🥘 recipe-box — neon capybara cuisine, born from a ramble. 94% of it is still yuzu and river grass.
+- 🍊 CAPYDORO — the capybara onsen focus timer. two modes: soak and deep soak. breaks are mandatory and indefinite.
+- 🐍 CAPY CONGA — a neon arcade conga line in 2D / 2.5D / 3D. the line is a friend. everyone is a friend.
+- 🛍 CapyMart — a capybara lifestyle storefront. everything is soft, warm, and faintly smells of citrus.
+- 📈 baramarket — a polymarket for capys. bet on whether today is good soaking weather. it always is.
+- Each card shows emoji + title, description, "vibed, not typed" tag; hover: 5px lift, accent-soft border, enhanced shadow
+
+**Footer**:
+- Paw emoji (🐾), "built on VibeHub — no code was typed"
+
+**Design**:
+- All corners rounded (22px base); responsive max-width 880px
+- System sans-serif, responsive font sizes with clamp()
+- Smooth transitions (0.25s) on hover; subtle drop shadows
+- Smooth scrolling; SVG capybara with canonical proportions and features
+[distiller] finished (success)

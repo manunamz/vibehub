@@ -1,0 +1,60 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll look at the current app to see what the capy reskin added.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Now remove the scene CSS and the timer-row wrapper styles:
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Now the HTML body — restore labels, remove the scene markup and the now-unneeded wrapper:
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Now the JavaScript — phase names, remove capy logic, and the theme list default:
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Finally the theme picker — replace the "Onsen" default entry with a plain default (saved `onsen` preference falls back to it automatically):
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Let me verify nothing capy-related is left behind except the yuzu counter:
+[Grep] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+One stale comment mentions "soak" — I'll fix that:
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Done — the capy theming is dialed back to just the yuzu counter. In `index.html`:
+
+- **Removed the onsen scene entirely**: the capybara SVG (rocks, water, ripples, floating yuzu, steam wisps), all of its CSS (sink/bob/steam animations, scene color variables), the `renderCapy()` sinking logic in JS, and the `.timer-row` wrapper that existed only to sit the scene beside the ring. The ring now stands alone, centered as before.
+- **Restored plain naming**: phase labels are Work / Break / Long Break again, the cycle readout is "Pomodoro #N", settings say Work (min) / Break (min) / Long break (min) / Work per long break, the heading and page title are back to "Pomodoro", and the audio-comment references were cleaned up too.
+- **Restored the previous default look**: the warm onsen palette is replaced with a neutral dark default (tomato-red work accent, green break accent), and the theme picker's first option is now "Classic" instead of "Onsen". Anyone with `onsen` saved in localStorage falls back to the default theme automatically; the other six themes are untouched.
+- **Kept the one capy touch**: the daily counter still reads "N yuzu earned today" with its little yuzu icon, persisted and midnight-rollover behavior unchanged.
+
+All timer logic, settings persistence, chimes, ticking, themes, and keyboard shortcuts are unaffected.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Read] /Users/vibybara/vibehub/data/repos/pomodoro/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/pomodoro/code'
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Build a pomodoro timer app in a single HTML file with the following features:
+
+**Core timer**: Large circular countdown (MM:SS) in center with work/break/long-break phases cycling continuously. Default durations: Work = 25 min, Break = 5 min, Long Break = 15 min. Display phase label ("Work", "Break", "Long Break"), cycle number (Pomodoro #1, etc.), and total time remaining below timer.
+
+**Visual design**: Circular SVG progress ring that drains as time counts down, with colors changing by theme and phase. Responsive, centered layout with monospace numbers for timer.
+
+**Controls**: Start/Pause button (shows "Start"/"Resume"/"Pause"), Skip (advance to next phase), Reset (return to start). Space key toggles start/pause. Auto-start the next session when current one ends.
+
+**Settings panel** (gear icon, top-left): Editable numeric inputs for Work, Break, Long Break durations (1–120 min each), and pomodoros-per-long-break count (1–12). Checkbox "Tick last 10 sec" (default off) plays a soft high-frequency tick sound during final 10 seconds of any phase. All settings persist to localStorage with validation.
+
+**Theme picker** (color dot + "Theme" button, top-right): Seven themes—Classic (default, dark warm palette), Tokyo Night, Ocean, Forest, Rose, Ember, Light—each with distinct CSS custom properties (--bg, --text, --panel, --work, --break, --accent, etc.). Persist theme choice to localStorage.
+
+**Audio**: Generate Web Audio API chimes—three rising notes (C5 E5 G5) for work-done, two-note callback (E5 C5) for break-done. Each note has soft attack and long decay with quiet octave-up partial for shimmer. Optional ticking: high-frequency triangle wave during final 10 seconds when enabled.
+
+**Daily yuzu counter**: Display "N yuzu earned today" with yellow/brown SVG yuzu icon below controls. Persist per-day using localStorage with date key; auto-reset at midnight. Dynamically pluralize label. Increment count when a Work session completes.
+
+**UX**: Use `Date.now()` timestamp-based timing to survive tab throttling; update display ~4 times per second. Settings/theme panels close when clicking outside or pressing Escape. Show hint below counter: "A chime plays when each session ends. Space = start/pause." Update document title to show current time and phase. Responsive, centered layout.
+[distiller] finished (success)

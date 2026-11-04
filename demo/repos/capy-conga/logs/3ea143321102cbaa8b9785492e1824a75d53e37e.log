@@ -1,0 +1,78 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: After a game session ends, provide players with options to either play again or return to the main menu.
+
+PLAN:
+- Show a game-over/end screen when the session concludes
+- Add "Play Again" button to restart the game with fresh state
+- Add "Main Menu" button to navigate back to the home screen
+- Clean up game state properly between sessions
+[ramble] finished (success)
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll look at the existing game code to see how sessions end and what menu structure exists.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now the JS: DOM refs and click wiring. Replace the overlay-wide "tap anywhere to restart" with the two buttons:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now update the game-over key handling (Space/Enter = play again, M/Esc = menu) and add the `returnToMenu()` function with full state cleanup:
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+All changes are in. The game-over screen now presents an explicit choice instead of restarting on any input:
+
+- **End screen buttons** — the game-over overlay keeps the score/hi-score/new-record display and now shows a neon-green "▶ PLAY AGAIN" button and a cyan "MAIN MENU" button, styled to match the arcade cabinet look.
+- **Play Again** — calls the existing `startGame()`, which already rebuilds the snake, food, score, speed, and timers from scratch.
+- **Main Menu** — a new `returnToMenu()` switches back to the title screen (with the INSERT COIN button and view-mode select) and wipes every piece of session state: snake, food, power-up, queued turns, particles, trail, slow-mo/ghost effects, screen shake, and score. It also repaints the canvas so the dead snake doesn't linger behind the menu, and plays a little descending beep.
+- **Keyboard support** — on the game-over screen, Space/Enter plays again and M/Escape returns to the menu; a small hint line under the buttons documents both. The old "tap anywhere to continue" behavior was removed so a tap can't accidentally restart when the player meant to pick a button.
+
+Edge cases handled: the render loop guards on `snake`/`food` being null, so the menu state renders cleanly in all three view modes; the power-up HUD badges hide automatically once the state leaves playing/paused; and Space on the game-over screen takes priority over its 3D "rise" binding.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current app code to see what was actually implemented with the latest vibe.
+[Glob] **/*.html
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic in a single HTML file. The game offers three distinct render modes switchable via 1/2/3 keys or start-screen buttons.
+
+**Core Gameplay:**
+- **2D/2.5D:** 20×20 grid, 24px cells; **3D:** 10×10×10 volumetric cube
+- Snake starts centered with 3 segments facing right; input buffer for up to 2 queued moves (prevents 180° turns and duplicates)
+- Arrow keys/WASD control movement; in 3D, these are camera-relative; Q/Space rise through z-axis, E/Shift dive (real vertical moves)
+- Food spawns randomly in 3D space; collision adds 1 segment, scores 10 points
+- Speed: start 150ms per move, subtract 4ms per food (min 55ms); slow-mo multiplies by 1.8× when active
+- Death on wall/self collision (tail safe if growing); screen shake on death (420ms decay, ±10px)
+
+**Three Render Modes:**
+- **2D:** Classic flat neon board with glowing cyan border, faint grid, snake head cyan with eyes, body fades green, food pulsing pink diamond, 32% opacity trail clearing
+- **2.5D:** Same 20×20 board through fixed perspective tilt + depth shading (farther = darker); arena has glowing cyan rim, depth-sorted rendering
+- **3D:** Full volumetric cube; snake lives in N×N×N space (N=10); orbitable camera (drag to rotate, scroll to zoom); wireframe cyan cage, floor shadows, pulsing ring marks current layer, elevation gauge (right side), layer readout (bottom-left); gentle auto-orbit when not dragging; depth cues: segments scale/fade with distance
+- Mode selection on start screen with buttons labeled "2D / 2.5D / 3D" (no numeric prefixes); switchable anytime via 1/2/3 keys; switching 3D mid-run restarts; one persistent high score across all modes; remember last-used mode in localStorage
+
+**Power-Ups (all modes, 3D space):**
+- Yuzu Berry (yellow orb with green leaf): slow-mo (1.8×) for 6 seconds
+- Ghost Star (5-point white star, cyan glow): phase through self for 6 seconds
+- Spawn every 6–13 seconds, exist 9 seconds, blink when <1.5s remain; spawn randomly in free 3D cells
+- Power-up HUD badges (center) with countdown timers (0.0s format), blink near expiry
+- Particle bursts (14 pink/yellow particles) on grab; world-space physics with bounce
+
+**Visual Style & Effects:**
+- Dark background (#05050a); Press Start 2P font; neon palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- Death animation: 650ms flashing red/white segments, descending beep (220→140→80Hz sawtooth)
+- Food eat: ascending pitch beep (880Hz + min(score, 400))
+- Power-up grab: ascending triple beep for star (740→990→1240 Hz), double for yuzu (520/390 Hz)
+- CRT scanlines overlay (3px dark lines), depth-sorted rendering
+- Ghost mode: head white, body cyan, reduced opacity with shimmer
+
+**UI & Game States:**
+- States: start, playing, paused, dying (650ms), gameover
+- HUD: score (green glow, left), power badges (center), hi-score (pink glow, right); mode tag (bottom-right)
+- Start screen: pulsing "NEON SNAKE" title, mode selector buttons, "INSERT COIN" button (yellow, blinking)
+- Pause screen: "PAUSED" title, power-up hints, "PRESS P TO RESUME"
+- **Game Over screen:** Final score and best score displayed; "NEW HI-SCORE" if applicable; two clickable buttons: "PLAY AGAIN" (green, restarts with fresh game state) and "MAIN MENU" (cyan, returns to start screen with full cleanup); keyboard shortcuts: Space/Enter for play again, M/Esc for main menu
+- Space/Enter starts from start/game-over; arrow/WASD auto-starts; P toggles pause
+[distiller] finished (success)

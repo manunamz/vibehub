@@ -1,0 +1,88 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: Build a YouTube-style video platform that curates only videos repeatedly recommended on Hacker News over the years.
+
+PLAN:
+- Source HN video recommendations via API scraping or historical data
+- Track videos mentioned multiple times across posts/comments to identify repeat endorsements
+- Build a YouTube-like interface with video browsing, categories, and playback
+- Embed or link to the original videos with HN context (mentions, discussion threads)
+[ramble] finished (success)
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+[Glob] **/*
+
+[vibehub] rerun requested
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+[Glob] **/*
+[Write] /Users/vibybara/vibehub/data/repos/hacktube/code/index.html
+The app is built — a single self-contained `index.html` ("HackTube") that works end to end when opened in a browser.
+
+What it does:
+
+- **Curated HN canon as the dataset.** Since HN has no "videos" API dimension, the catalog is a hand-curated set of 41 videos that are genuinely re-submitted and re-recommended on Hacker News year after year — Bret Victor's "Inventing on Principle", Hamming's "You and Your Research", the Mother of All Demos, Rich Hickey's talks, Karpathy's GPT-from-scratch, "The Expert", KRAZAM's "Microservices", Ben Eater's 6502 build, and so on. Each entry carries title, speaker, year, duration, category, a description, an estimated HN mention count, and a "Why it's HN canon" note explaining its repeat-endorsement history.
+- **Live HN data for the "repeat mentions" evidence.** On each watch page the app queries the Algolia HN Search API (CORS-enabled, no key needed) for real submissions of that video — matched by YouTube ID in the URL and by title — deduplicates them, filters to genuine matches, and lists the top threads with points, comment counts, date, and direct links to the `news.ycombinator.com` discussions, plus an "all HN results" search link. If the API is unreachable it degrades gracefully to a direct HN search link.
+- **YouTube-style interface.** Dark theme, fixed header with search, category sidebar with per-category counts (Programming, Computer History, AI & ML, Science, Hardware, Talks, Tech & Society, Documentaries, Culture), sticky filter chips, sort control (most HN mentions / newest / oldest / A–Z), and a responsive card grid with real YouTube thumbnails, duration badges, and an "HN mentions" pill on every card.
+- **Playback with context.** Clicking a card routes to `#/watch/<id>` (back button works) with an embedded `youtube-nocookie` player, metadata, the HN discussion panel, and a "More HN classics" related-videos rail that prioritizes the same category.
+
+Everything runs from the one file — no build step, no dependencies — so it previews directly in a browser.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Glob] **/*
+[Glob] *.json
+[Glob] *.js
+[Glob] *.html
+[Glob] *.css
+[Glob] *.ts
+[Read] /Users/vibybara/vibehub/data/repos/hacktube/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/hacktube/code'
+[Read] /Users/vibybara/vibehub/data/repos/hacktube/code/index.html
+Build a YouTube-style video platform called **HackTube** that showcases videos the Hacker News community has repeatedly recommended and submitted over the years.
+
+## Core Data
+Create a curated dataset of ~47 videos (hand-select well-known tech talks, lectures, and documentaries that are frequently re-posted on HN). For each video, store:
+- YouTube ID, title, creator/speaker, year published, duration
+- A category (Programming, AI & ML, Computer History, Hardware, Science & Math, Talks & Ideas, Tech & Society, Documentaries, Culture & Fun)
+- Estimated HN mention count (how many times submitted/recommended)
+- Short description
+- "Why it's HN canon" — explanation of why this video resurfaces repeatedly on HN
+
+## Home Page & Browsing
+- Fixed header with logo, search bar, and "curated from Y" (HN badge)
+- Left sidebar with categories (each with emoji icon) and video counts
+- Hero section explaining the concept: "Videos Hacker News can't stop recommending"
+- Sticky category chips below hero
+- Sort options: Most HN mentions, Newest, Oldest, A→Z
+- Responsive grid of video cards (each showing thumbnail, duration, HN mention count as a pill, title, creator, year, category)
+- Search across titles, creators, descriptions
+- On mobile: hide sidebar, full-width layout
+
+## Watch Page
+- Embedded YouTube iframe (youtube-nocookie domain)
+- Video title, creator avatar, year, duration, category tag
+- HN mention score badge
+- Description and "Why it's HN canon" section
+- **Live HN discussions**: Fetch real discussion threads from the Algolia HN Search API (search by video title and YouTube ID), show top 8 threads ranked by points with comment count, date, and link to HN
+- "Back to browsing" button
+- Related videos sidebar (10 videos, sorted by same category then by HN mentions)
+
+## Styling & UX
+- Dark theme (inspired by YouTube): dark grays/blacks with orange accent (#ff6600)
+- Smooth hover effects on cards
+- Hash-based routing (#/watch/[videoId])
+- Color-coded creator avatars (deterministic color from name)
+- Lazy loading for images with fallback thumbnail sizes
+- Responsive design (grid adjusts, nav hides on narrow screens)
+- Search input auto-applies when cleared
+
+## Key Behaviors
+- All filtering/sorting/search happens client-side on the dataset
+- Live thread data is fetched on-demand and cached per video
+- If thread fetch fails, show a fallback with link to search HN directly
+- Clicking logo or "back" scrolls to top and navigates home
+
+Use vanilla HTML/CSS/JavaScript (no frameworks). Aim for simplicity and clarity over cleverness.
+[distiller] finished (success)

@@ -1,0 +1,9 @@
+[vibehub] agent mode: claude
+The theme picker is in. Here's what I added to `index.html`:
+
+- **Theme button** — a pill button fixed in the top-right corner with a dot showing the current accent color. Clicking it opens a dropdown menu; clicking outside or pressing Escape closes it.
+- **Six themes** — Tokyo Night (the original, default), Ocean, Forest, Rose, Ember, and a Light theme. Each menu option shows a three-dot swatch preview (background, work accent, break accent), and the active theme is outlined.
+- **CSS variable overrides** — each theme is a `body[data-theme="..."]` block that overrides the existing `--bg`, `--panel`, `--text`, `--muted`, `--work`, and `--break` variables, so the timer ring, buttons, inputs, and work/break mode colors all follow the theme automatically. I also converted the one hardcoded input border color into a `--border` variable so it themes correctly too.
+- **Persistence** — the choice is saved to `localStorage` (wrapped in try/catch for sandboxed previews) and restored on load.
+
+No timer logic was touched, so the work/break cycling, chime, and keyboard shortcut all behave exactly as before.

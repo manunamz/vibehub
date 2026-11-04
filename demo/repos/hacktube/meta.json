@@ -1,0 +1,10 @@
+{
+  "name": "hacktube",
+  "description": "the one-prompt thesis: a whole video platform from a single pasted vibe",
+  "createdAt": 1793607995939,
+  "settings": {
+    "agentKind": "auto",
+    "agentModel": "default",
+    "distillerModel": "haiku"
+  }
+}

@@ -1,0 +1,76 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: Build a classic Snake game with arcade energy—glowy neon trails, chunky pixelated font, screen shake on crash, persistent high score across refreshes, and increasing speed as you eat. Include a start screen with INSERT COIN vibes and support arrow or WASD controls.
+
+PLAN:
+- Core snake mechanics with pixel-perfect rendering and chunky retro font
+- Canvas-based neon trail effect (glow/blur behind the snake)
+- Speed ramp: gradually increase velocity each food eaten
+- Screen shake on collision (brief canvas offset)
+- Score display + localStorage high score persistence
+- Start screen overlay with INSERT COIN button and arcade UI styling
+- Input handling for arrow keys and WASD
+[ramble] finished (success)
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+[Glob] *
+[Write] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+The game is built — a single self-contained `index.html` (no dependencies beyond a Google Fonts link for the chunky "Press Start 2P" arcade font). Open it in a browser to play.
+
+Everything from the plan is in:
+
+- **Core mechanics** — 20×20 grid, 24px chunky cells, queued input (up to 2 buffered turns so fast double-taps register), no instant 180° reversals, and the classic tail-cell exception so moving into the spot your tail is vacating doesn't kill you.
+- **Neon trails** — the canvas clears with a translucent fill each frame instead of a full wipe, so the glowing snake leaves fading light trails; head is cyan, body is green with shadow-blur glow, food is a pulsing pink diamond.
+- **Speed ramp** — starts at 150ms per move, shaves 4ms per food eaten, capped at 55ms.
+- **Screen shake** — on crash the canvas jitters with decaying magnitude for ~420ms while the snake flashes red/white, then the GAME OVER screen drops in.
+- **Score + persistence** — HUD shows SCORE and HI-SCORE; the high score survives refreshes via `localStorage` (wrapped in try/catch so it degrades gracefully if storage is blocked), with a blinking "★ NEW HI-SCORE ★" callout when you beat it.
+- **Start screen** — pulsing NEON SNAKE title, blinking "▶ INSERT COIN ◀" button, a "© 2026 VIBEHUB AMUSEMENTS" credit line, plus CRT scanlines over the whole page and a cyan glowing cabinet frame.
+- **Controls** — arrows and WASD both work; any movement key, Space, Enter, or the coin button starts a game, and Space/Enter/click restarts from game over.
+
+As a bonus there are tiny WebAudio chiptune beeps (coin-up jingle, eat blips that rise in pitch, a descending crash sound) and a particle burst when you eat — all generated in code, no assets needed.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current app to understand what was built and write a prompt that captures it.
+[Glob] **/*.{js,ts,jsx,tsx,html,css,json}
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic. The game runs in a single HTML file on a 480x480 canvas.
+
+**Core Gameplay:**
+- 20×20 grid with 24px cells
+- Snake starts center-aligned with 3 segments facing right
+- Arrow keys or WASD to control direction; support both simultaneously
+- Input buffer holds up to 2 queued moves; prevent 180° turns and duplicate inputs
+- Food spawns randomly in empty cells; collision adds 1 segment and scores 10 points
+- Speed increases each food: start at 150ms per move, subtract 4ms per food (min 55ms)
+- Death on wall collision or self-collision (tail is safe if growing that frame)
+
+**Visual Style (Neon Arcade):**
+- Dark background (#05050a); use "Press Start 2P" for chunky retro font
+- Neon color palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- Canvas has glowing cyan border with box-shadow glow
+- Faint cyan grid overlay on game field
+- Snake head is cyan with glow, body segments fade to green with decreasing opacity
+- Render chunky pixel eyes (4×4px) on the head, positioned by direction
+- Food as pulsing pink diamond shape with glow (pulse cycle 180ms, scale 0.72–0.88)
+- Partial canvas clearing creates neon motion trails: fill with 32% opacity dark color instead of full clear
+
+**Effects & Feedback:**
+- Particle burst on food eat: 14 pink/yellow particles radiating outward for ~450ms
+- Screen shake on death: 420ms decay, random offset up to ±10px
+- Death animation: 650ms flashing (80ms intervals) alternating red/white segments
+- Audio: beeps on game start (660Hz, 880Hz), food eat (pitch rises with score), death (descending 220→140→80Hz sawtooth)
+
+**Persistent State & UI:**
+- localStorage high score under key 'neonSnakeHiScore'
+- HUD above canvas: current score (green glow) on left, hi-score (pink glow) on right
+- Start screen overlay with pulsing "NEON SNAKE" title (green + pink), "INSERT COIN" button (yellow, blinking), control hints
+- Game Over overlay with final score, best score, "NEW HI-SCORE" badge (if applicable), "PRESS SPACE OR TAP" prompt
+- CRT scanlines overlay across entire page (subtle 3px dark lines)
+
+**Input & State:**
+- Space or Enter to start from any screen or restart
+- Three states: 'start', 'playing', 'dying' (650ms), 'gameover'
+- Keyboard input from start state auto-starts game; any arrow/WASD key starts mid-start-screen
+[distiller] finished (success)

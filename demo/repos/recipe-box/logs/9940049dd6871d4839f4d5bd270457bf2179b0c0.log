@@ -1,0 +1,50 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll look at the existing recipe box app first.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+The app already exists with the neon cyberpunk style. I'll swap the seed recipes for capybara cuisine, add the capy touches to the spinner and copy, and leave the restyle and all features intact.
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+Now the hero and form copy:
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+Now the spinner copy ("the capybara has chosen"), the hint text, confetti, and footer:
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+One footer wording cleanup:
+[Edit] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+The recipe box is now capybara-friendly, with the neon cyberpunk restyle and all features untouched. What changed in `index.html`:
+
+- **Seed recipes replaced with capybara cuisine** — all six dishes from the prompt (Yuzu-Infused Grass Salad, Hot-Spring Veggie Stew, Melon Rind Crunch, Bamboo Shoot Snack Mix, Cucumber Coins, Sweet Potato Mash), each with real ingredients and steps written in CapyMart voice. Tags use the requested set: `onsen-night`, `snack`, and `fancy`, plus a few supporting ones (`grazing`, `comfort`, `crunchy`) so the tag cloud and filters have texture.
+- **Seeding is a one-time migration**, not just first-visit: a `recipe-box-capy-seeded` flag retires the old tomato-orzo/chicken-soup demo seeds and adds the capy dishes, while leaving any user-added recipes in localStorage alone. Deleting a seed won't resurrect it on reload.
+- **The dinner spinner now channels the capybara**: while flipping it shows "the capybara is deliberating..." with a 🦫, and the winner card is announced with "🦫 the capybara has chosen". Confetti now rains capy-appropriate foods (🥒 🍈 🎋 🍠 🌿).
+- **Gentle touches throughout**: header is now "🦫 The Recipe Box — a cozy little drawer for the meals capybaras love · a CapyMart joint", form placeholders and the tag hint suggest capy examples (`onsen-night, snack, fancy`), the hero asks you to "ask the capybara," and the footer is approved by the capybara council.
+
+No CSS was touched — the neon palette, scanlines, flicker, modal, filtering, search, and spinner mechanics all work exactly as before.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+Build a recipe box app where users paste and organize recipes with tags, then spin a button to get random dinner suggestions, with capybara theming and neon cyberpunk styling.
+
+**Recipe Input**: A form to add recipes by pasting text. Users enter a recipe name or it auto-guesses from the first non-empty line of pasted text. Tags are comma-separated. Recipes save to localStorage automatically.
+
+**Recipe Display**: Cards in a scrollable list showing recipe name, 2-line text preview, and tag chips. Clicking any card opens a modal with the full recipe text, all tags, and a delete button. On first visit, seed with six capybara-specific recipes: Yuzu-Infused Grass Salad, Hot-Spring Veggie Stew, Melon Rind Crunch, Bamboo Shoot Snack Mix, Cucumber Coins, and Sweet Potato Mash—tagged with onsen-night, snack, fancy, grazing, comfort, crunchy.
+
+**Tag Cloud & Filtering**: Display all tags with recipe counts. Users can click tags to filter (AND logic—selecting "snack" and "onsen-night" shows only recipes with both). A search box filters by recipe name, text content, or tags. Show a "Clear" button when filters are active. Display a count line ("3 recipes in the box" or "Showing 2 of 5"). Empty states show 🫙 when the box is empty or 🍽️ when no recipes match filters.
+
+**The Spinner Hero**: A "Spin for Dinner!" button with a 🥘 icon in a prominent hero section. The hero says "Can't decide what's for dinner tonight? Ask the capybara." Clicking the button picks a random recipe from the filtered list (or all recipes if no filters). The button animates through recipe names with easing-out delays, then reveals the winner in a card with "🦫 the capybara has chosen" as the label, the recipe name, tags, and a "peek at the recipe →" link. Confetti falls (🥒 🍈 🥕 🌿 🍠 🎋 ✨). The pot emoji rotates while spinning.
+
+**Neon Cyberpunk Design**: Near-black background (#07070e with layers at #0d0d1a, #10101f) with subtle radial gradients (magenta/cyan glow at edges). Colors: neon magenta (#ff2ec4), cyan (#00f0ff), violet (#8a5cff), soft gray text (#d8e0f0). Monospace (Courier New) for headings/labels, sans-serif (Segoe UI) for body. Glowing text-shadows on titles, neon box-shadows on panels and buttons, CRT scanline texture overlay (1px dark lines with 2px gap). Neon gradient top strip (magenta-violet-cyan-violet-magenta with heavy glow). Glowing borders on inputs and cards. Recipe cards have colored left borders (cyan/magenta/violet alternating). Buttons glow brighter on hover. Title flickers subtly. Winner card pops with overshoot easing.
+
+**Capybara Theming**: Title is "🦫 The Recipe Box" with subtitle "a cozy little drawer for the meals capybaras love · a CapyMart joint". Footer: "made with fresh grass & love · recipes live safely in your browser · approved by the capybara council 🦫". Spinner messages say things like "the capybara is deliberating..." and "the capybara has chosen". Hint text reads "Feeling the filters? The capybara respects your search & tags."
+
+**Technical Details**: Single-file HTML/CSS/JS app (no build step), localStorage for persistence (key: "recipe-box-v1"), vanilla JS (no frameworks), modal overlay with ESC-to-close and click-outside-to-close, responsive design for mobile and desktop (two-column layout becomes single column on mobile).
+[distiller] finished (success)

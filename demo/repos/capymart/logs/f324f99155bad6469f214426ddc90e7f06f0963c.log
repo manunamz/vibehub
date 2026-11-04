@@ -1,0 +1,86 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll look at the existing storefront first, then apply the CAPYMART NOIR rebrand.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/capymart/worktrees/exp/dark-luxe/code/index.html
+[Write] /Users/vibybara/vibehub/data/repos/capymart/worktrees/exp/dark-luxe/code/index.html
+CapyMart is now CAPYMART NOIR. I rewrote `index.html` with a full dark-luxury restyle while leaving the catalog, cart, discount (CAPY10), and checkout logic byte-for-byte intact — only one functional-adjacent touch: order numbers now read `NOIR-xxxx` instead of `CAPY-xxxx`.
+
+What changed:
+
+- **Palette** — near-black page (`#0d0b09`) with a faint gold glow at the top, charcoal panels for cards/drawer/modals, ivory text, and a three-step gold system (dim `#8a7435`, base `#c9a227`, bright `#e6c768`) for accents, prices, and totals.
+- **Type** — serif throughout: Georgia for body copy, Didot/Playfair/Bodoni for display headings, with uppercase letter-spaced treatments on the wordmark ("CAPYMART *NOIR*"), tagline, buttons, and labels.
+- **Spotlit product cards** — each product SVG's background and floor shadow were re-lit to a dark tone per product, and the card art gets two CSS overlay layers: a permanent warm spotlight-plus-vignette, and a second brighter beam that fades in over 0.9s on hover. The same treatment applies to the detail-modal art. Dark strokes that would have vanished on dark backgrounds (headphone headband, hero capy's facial features) were lightened so the art still reads.
+- **Slower, softer hovers** — card lift is now 0.6s on a soft cubic-bezier with a gold-edged glow instead of the old 0.2s pop; buttons cross-fade from gold-outline to gold-fill over 0.5s; the drawer, overlay, and toast all eased out to ~0.5s.
+- **Moody copy and art** — the hero capybara now soaks under a glowing moon with gilded water ripples, the eyebrow reads "Maison de Capybara · Est. after sunset," the collection is "The Noir Collection" shipping "by candlelight," and the confirmation emoji swapped 🌿 for 🌙.
+
+Everything is still a single self-contained `index.html` — open it in a browser to preview.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current code to understand what's been built with the NOIR rebrand.
+[Glob] /Users/vibybara/vibehub/data/repos/capymart/worktrees/exp/dark-luxe/code
+[Read] /Users/vibybara/vibehub/data/repos/capymart/worktrees/exp/dark-luxe/code/index.html
+Build a capybara lifestyle goods storefront as a single HTML file (no build step) — **CAPYMART NOIR**, a dark luxury rebrand of the original shop. The design features near-black backgrounds, gold accents, and moody spotlit product cards.
+
+**Color Palette & Typography:**
+- Backgrounds: Near-black (#0d0b09), deep panel (#171310)
+- Text: Ivory (#ede4d2), soft ivory (#a69a84)
+- Accents: Gold (#c9a227), bright gold (#e6c768)
+- Font: Georgia serif for body, Didot/Playfair Display for display text (logo, headings)
+- All transitions: smooth 0.5s cubic-bezier(0.22, 1, 0.36, 1) easing
+
+**Header:**
+- Sticky, semi-transparent with backdrop blur
+- Logo: capybara SVG mark + "CapyMart *Noir*" (Noir in italic gold)
+- Tagline: "The unbothered life, after dark" (hidden on mobile)
+- Cart button: gold outline, highlights on hover
+
+**Hero Section:**
+- Split layout: text left (serif headline emphasizing "relaxed" in italic gold), SVG capybara right soaking in moonlit hot spring with yuzu on head
+- Smaller eyebrow text, subheading describing the dark luxury vibe
+- Responsive wrapping on mobile
+
+**Product Grid (6 items):**
+- Responsive auto-fill layout (280px min), cards with gradient backgrounds
+- SVG art with moody radial gradient overlays (spotlight effect + vignette)
+- On hover: subtle lift (translateY -6px), gold border glow, brighter spotlight overlay
+- Each card shows: product title, short description, price (gold), "Add to Cart" button
+- Cards are clickable to open detail modals
+
+**Products (all inline SVG, re-lit for noir aesthetic):**
+1. Yuzu Bath Bombs ($14) — three golden citrus spheres on dark bg
+2. Tiny Headphones ($32) — terracotta over-ears with gold accents
+3. Hot-Spring Towel ($18) — folded waffle towel stack with steam
+4. Zen Pebble Set ($24) — stacked smooth stones on raked sand
+5. Artisanal Grass Snacks ($9) — bundled timothy grass with twine
+6. Lofi Cassette ($12) — cassette tape labeled "Riverbank Beats"
+
+**Product Detail Modal (click card):**
+- Full-size SVG art at top with same moody lighting
+- Product name, short description, extended details, price, "Add to Cart" button
+- Close button (×) top-right; backdrop closes modal; Escape closes it
+
+**Cart Drawer (slide from right):**
+- Cart items show: thumbnail SVG, name, price, qty controls (+/−), remove link, line total
+- Empty state: sad capybara icon + message
+- Footer: running total, disabled "Checkout" button (enabled when cart has items)
+- Smooth slide-in/out, overlay backdrop
+
+**Checkout Modal:**
+- Order summary: each item with qty and line total
+- Subtotal, free shipping, grand total
+- Discount code input: supports CAPY10 for 10% off, shows success/error message
+- Buttons: "Keep Browsing" (closes modal + drawer), "Place Order"
+- After placing order: shows "Order NOIR-XXXX placed!" message, mentions savings if discount applied, hides Place Order button
+
+**Interactions & Behavior:**
+- Add to Cart button flashes "Added ✓" for 900ms, then resets
+- Toast notification slides up from bottom when item added, auto-dismisses after ~1800ms
+- Quantity controls update cart in real-time; remove deletes item entirely
+- Escape key closes modals/drawer with priority: checkout modal → detail modal → drawer
+- All hover effects smooth with soft transitions
+- Cart count badge updates in header
+- Discount code CAPY10 applies 10% off (any other code shows error message)
+[distiller] finished (success)

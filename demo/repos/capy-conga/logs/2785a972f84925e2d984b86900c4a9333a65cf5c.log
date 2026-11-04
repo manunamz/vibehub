@@ -1,0 +1,60 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+[Grep] 2\.5D|mode-btn|modeBtn
+[Grep] index.html
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+The keyboard shortcuts at index.html:577-579 are handled independently of the button labels, so I only need to strip the `1·` / `2·` / `3·` prefixes from the three buttons.
+[Edit] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Done. The mode buttons in `index.html` now read plain **2D / 2.5D / 3D** — I removed the `1·`, `2·`, `3·` prefixes from the three button labels. The keyboard shortcuts are untouched: the keydown handler at `index.html:577-579` maps keys 1/2/3 to `setRenderMode` independently of the button text, so pressing 1, 2, or 3 still switches modes as before.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/neon-snake/code'
+[Glob] **/*.html
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic in a single HTML file. The game offers three distinct render modes switchable via 1/2/3 keys or start-screen buttons.
+
+**Core Gameplay:**
+- **2D/2.5D:** 20×20 grid, 24px cells; **3D:** 10×10×10 volumetric cube
+- Snake starts centered with 3 segments facing right; input buffer for up to 2 queued moves (prevents 180° turns and duplicates)
+- Arrow keys/WASD control movement; in 3D, these are camera-relative; Q/Space rise through z-axis, E/Shift dive (real vertical moves)
+- Food spawns randomly in 3D space; collision adds 1 segment, scores 10 points
+- Speed: start 150ms per move, subtract 4ms per food (min 55ms); slow-mo multiplies by 1.8× when active
+- Death on wall/self collision (tail safe if growing); screen shake on death (420ms decay, ±10px)
+
+**Three Render Modes:**
+- **2D:** Classic flat neon board with glowing cyan border, faint grid, snake head cyan with eyes, body fades green, food pulsing pink diamond, 32% opacity trail clearing
+- **2.5D:** Same 20×20 board through fixed perspective tilt + depth shading (farther = darker); arena has glowing cyan rim, depth-sorted rendering
+- **3D:** Full volumetric cube; snake lives in N×N×N space (N=10); orbitable camera (drag to rotate, scroll to zoom); wireframe cyan cage, floor shadows, pulsing ring marks current layer, elevation gauge (right side), layer readout (bottom-left); gentle auto-orbit when not dragging; depth cues: segments scale/fade with distance
+- Mode selection on start screen with buttons labeled "2D / 2.5D / 3D" (no numeric prefixes); switchable anytime via 1/2/3 keys; switching 3D mid-run restarts; one persistent high score across all modes; remember last-used mode in localStorage
+
+**Power-Ups (all modes, 3D space):**
+- Yuzu Berry (yellow orb with green leaf): slow-mo (1.8×) for 6 seconds
+- Ghost Star (5-point white star, cyan glow): phase through self for 6 seconds
+- Spawn every 6–13 seconds, exist 9 seconds, blink when <1.5s remain; spawn randomly in free 3D cells
+- Power-up HUD badges (center) with countdown timers (0.0s format), blink near expiry
+- Particle bursts (14 pink/yellow particles) on grab; world-space physics with bounce
+
+**Visual Style:**
+- Dark background (#05050a); Press Start 2P font
+- Neon palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- Ghost mode: head white, body cyan, reduced opacity with shimmer
+- CRT scanlines overlay (3px dark lines) across entire page
+- All modes: glowing effects via shadowBlur, depth-sorted particle/trail/entity rendering
+
+**Effects & Audio:**
+- Death animation: 650ms flashing red/white segments, descending beep (220→140→80Hz sawtooth)
+- Food eat: ascending pitch beep (880Hz + min(score, 400))
+- Power-up grab: ascending triple beep for star (740→990→1240 Hz), double for yuzu (520/390 Hz)
+- Start: 660Hz, 880Hz beeps
+
+**UI & States:**
+- States: start, playing, paused, dying (650ms), gameover
+- HUD: score (green glow, left), power badges (center), hi-score (pink glow, right); mode tag (bottom-right)
+- Start screen: pulsing "NEON SNAKE" title, mode selector buttons, "INSERT COIN" button (yellow, blinking)
+- Pause screen: "PAUSED" title, power-up hints, "PRESS P TO RESUME"
+- Game Over: final/best scores, "NEW HI-SCORE" if applicable
+- Space/Enter starts from start/game-over; arrow/WASD auto-starts; P toggles pause
+[distiller] finished (success)

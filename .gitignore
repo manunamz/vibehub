@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.idea/
+
+# Demo runtime instance — rebuilt from ./demo on the first `--demo` run.
+data-demo/
+
+# Default user instance: the skeleton + default settings are committed so a
+# fresh clone is ready to use, but live repos written at runtime are ignored.
+data/repos/*
+!data/repos/.gitkeep

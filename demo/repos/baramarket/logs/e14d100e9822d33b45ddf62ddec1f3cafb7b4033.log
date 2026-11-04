@@ -1,0 +1,81 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: Replace hardcoded feeds with live client-side fetches from Polymarket's public API (gamma-api.polymarket.com), with graceful fallback to sample data when offline while clearly labeling it as synthetic.
+
+PLAN:
+- Set up client-side API calls to gamma-api.polymarket.com instead of serving static data
+- Implement offline detection and fallback to sample data
+- Add a clear label/badge when displaying offline/synthetic data
+- Keep sample data fixtures for development and offline use
+[ramble] finished (success)
+[vibehub] coding agent: claude
+[agent] session started (claude-fable-5)
+Let me look at the existing files first.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+[Write] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+The scanner now pulls live Polymarket data instead of hardcoded feeds. Here's what changed in `index.html`:
+
+**Live API integration.** Pressing START SCAN now does a client-side `fetch` to `https://gamma-api.polymarket.com/events?limit=75&active=true&closed=false&order=volume24hr&ascending=false` (the Gamma API serves CORS-enabled JSON, so this works from a static page). The response is grouped by event tag into up to 8 "feeds" of up to 6 markets each, sorted by 24-hour volume. Each listing carries the market question, resolution description, the YES price in cents (parsed from `outcomePrices`), and 24h volume.
+
+**Graceful fallback.** The scan falls back to bundled fixtures when `navigator.onLine` is false (it skips the network call entirely), or when the fetch fails — timeout after 10 seconds via `AbortController`, non-200 status, empty, or unparseable response. The fixtures (`SAMPLE_EVENTS`) are shaped exactly like the Gamma `/events` payload, so live and offline data flow through the same grouping/scoring/rendering pipeline. `online`/`offline` browser events also log hints to the scanner console.
+
+**Clear synthetic labeling**, in five places: a header badge that reads "⚠ synthetic sample data" (vs. a green "● live · gamma-api.polymarket.com" on success), a red warning banner explaining the data is made up and a rescan retries the live feed, a "⚠ SYNTHETIC" pill on every result card, warn-colored console lines during fallback, and `synthetic`/`data_source` fields in the JSON and CSV exports.
+
+**Scoring adapted to real data.** The old capy keywords (melon, hay, pool) would score every real Polymarket question at 0%, so the interest model was retuned to prediction-market topics while keeping the capybara theme — 🗳️ Herd Politics, 🪙 Capycoin & Crypto, 🏆 Splash Sports, 📈 Forage Economy, 🚀 Curious Snout (Sci & Tech), 🎬 Watering Hole Gossip. Keywords now match on word boundaries (so "ai" doesn't match "rain"), and a small volume bonus rewards busy markets. Category chips, threshold filter, search, and exports all work unchanged against both live and sample data.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/baramarket/code'
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+Build BaraMarket Scanner v2.0: a single-file HTML app that fetches live prediction markets from Polymarket and scores them for capybara relevance, with graceful offline fallback and clear synthetic-data labeling.
+
+## Domain & Data
+
+Define 6 market interest categories matching Polymarket's real prediction ecosystem:
+- **Herd Politics**: election, president, senate, congress, vote, parliament, impeach, trump, democrat, republican, etc.
+- **Capycoin & Crypto**: bitcoin, ethereum, crypto, dogecoin, blockchain, market cap, token, airdrop, etc.
+- **Splash Sports**: nba, nfl, super bowl, world cup, champions league, olympics, etc.
+- **Forage Economy**: fed, interest rate, inflation, gdp, recession, tariff, unemployment, stock, cpi, etc.
+- **Curious Snout (Sci & Tech)**: openai, spacex, starship, ai, gpt, nasa, nuclear, climate, hurricane, vaccine, etc.
+- **Watering Hole Gossip**: oscar, netflix, taylor swift, grammy, box office, emmy, tiktok, spotify, etc.
+
+Anti-keywords that penalize: jaguar, caiman, anaconda, crocodile, animal testing.
+
+## Data Sources
+
+**Live fetch**: Client-side calls to `gamma-api.polymarket.com/events` (limit 75, ordered by 24h volume, active & open markets only). Parse title, tags, market question/description, outcomePrices (YES odds in cents), volume24hr. Timeout: 10s.
+
+**Offline fallback**: 16 bundled synthetic events (2028 election, Bitcoin $150k, Super Bowl LXI, Fed rates, Starship, GPT-6, etc.) clearly marked as fixtures. Used if offline or API fails. Display prominent red warning: "⚠ OFFLINE / SYNTHETIC MODE — the live Polymarket feed could not be reached. Everything below is synthetic sample data..."
+
+## UI (dark theme, monospace)
+
+Header: capybara emoji + "BARAMARKET SCANNER v2.0" + "scanning live polymarket prediction feeds for capy-relevant action since 2026". Top-right: **source badge** (green "● live · gamma-api" or red "⚠ synthetic sample data").
+
+Controls: START SCAN / RESCAN button, min-relevance threshold dropdown (30/50/70/90%), search input, JSON/CSV export buttons, progress bar, console log.
+
+Stats grid: feeds scanned, markets crawled, capy matches, top category.
+
+Category filter: 6 toggleable chips, all active by default.
+
+Results: market cards (feed name + location + endpoint + synthetic tag if offline) with product tables (market question, matched keywords, category tag, YES odds in cents, 24h volume, relevance %). Score pills: 70%+ green, 45-69% yellow, <45% red.
+
+## Core Features
+
+**Fetch engine**: acquireFeeds() tries live gamma-api call first; on failure (network/timeout) or navigator.onLine = false, falls back to SAMPLE_EVENTS. Logs state ("live fetch failed: timeout", "falling back to synthetic"). Returns {feeds, source: 'live'|'sample'}.
+
+**Scan**: Sequentially process feeds with simulated delays (120–280ms per feed, 40–100ms per market). Score each market. Log progress in real-time.
+
+**Scoring**: For each market, search question+description for keywords, sum weights by category, subtract anti-keyword penalties, clamp 0–100%. Bonus: if score > 0, add Math.min(18, log₁₀(volume+1)×3) for busy markets. Match if ≥threshold AND has a top category. Maintain topCat (highest-scoring category).
+
+**Filters**: results filter by active categories and text search (query matches question/description/matched keywords). Update on category chip toggle or search input.
+
+**Source UI**: updateSourceUI() sets sourceBadge and syntheticBanner visibility based on state.source. Live = green badge + hidden banner. Sample = red badge + visible red warning. Log online/offline events.
+
+**Exports**: JSON (baramarket-scan.json) and CSV (baramarket-scan.csv) include dataSource field ('gamma-api.polymarket.com' or 'synthetic-sample-fixtures') and synthetic boolean flag. Log export to console.
+
+**Empty states**: Before scan: "🔍 no scan data yet — the capybaras are waiting patiently". After scan with no matches: "🙈 no matches under current filters — widen the categories or clear the search".
+[distiller] finished (success)

@@ -1,0 +1,50 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll restore the CAPYDORO reskin (minus the capybara figure). Let me look at the current state of the app first.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Now the HTML: title, phase label, steam markup, and settings labels.
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+The CAPYDORO reskin is restored, with only the capybara figure still gone. All changes are in `index.html`:
+
+- **Title**: the page heading is back to CAPYDORO (and the browser tab title now reads `25:00 — Focus · CAPYDORO`).
+- **Steam wisps**: three blurred, animated wisps rise and sway off the top of the timer ring, with staggered delays so they feel organic. They respect `prefers-reduced-motion` (static faint wisps instead of animation), and a `--steam` color variable keeps them visible on the light theme.
+- **Warm onsen palette as default**: the `:root` theme is now warm browns with a yuzu-amber focus accent (`#f0a35e`) and soft bath-green break accent (`#8fc9a8`). The previous dark default wasn't lost — it moved to a new "Classic" entry in the theme picker (`data-theme="classic"`), with "Onsen" now listed first as the default. A previously saved theme choice still applies correctly.
+- **Phase labels**: Work / Break / Long Break are back to Focus / Soak / Deep Soak, both in the ring display and in the settings panel labels (Focus (min), Soak (min), Deep soak (min), Focus / deep soak).
+- **Yuzu counter**: already present from before, left untouched — it still shows "N yuzu earned today" with the yuzu icon.
+
+No capybara character was reintroduced, and all the existing functionality (timer logic, settings persistence, tick sound, chimes, theme picker) is unchanged.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current code to see what's actually implemented.
+[Glob] **/*.html
+[Glob] **/*.js
+[Glob] **/*.css
+[Read] /Users/vibybara/vibehub/data/repos/pomodoro/code/index.html
+Build CAPYDORO, a pomodoro timer app in a single HTML file with an onsen (hot spring) theme.
+
+**Core timer**: Large circular countdown (MM:SS) in center with work/break/long-break phases cycling continuously. Default durations: Focus = 25 min, Soak = 5 min, Deep Soak = 15 min. Display phase label ("Focus", "Soak", "Deep Soak"), cycle number (Pomodoro #1, etc.). Auto-start next session when current one ends.
+
+**Visual design**: Circular SVG progress ring that drains as time counts down. Warm onsen palette as default theme: dark brown background (#2a1f18), warm orange work phase (#f0a35e), muted green break phase (#8fc9a8), cream text (#f5e8d7). Animated steam wisps rising above the timer (3 staggered strokes with blur, floating upward continuously). Responsive, centered layout with monospace numbers.
+
+**Controls**: Start/Pause button (shows "Start"/"Resume"/"Pause"), Skip, Reset. Space key toggles start/pause. Update document title to show current time and phase.
+
+**Settings panel** (gear icon, top-left): Editable numeric inputs for Focus, Soak, Deep Soak durations (1–120 min each), and pomodoros-per-deep-soak count (1–12). Checkbox "Tick last 10 sec" plays a soft high-frequency tick sound during final 10 seconds of any phase. All settings persist to localStorage with validation.
+
+**Theme picker** (color dot + "Theme" button, top-right): Eight themes—Onsen (default, warm), Classic, Tokyo Night, Ocean, Forest, Rose, Ember, Light—each with distinct CSS custom properties. Persist theme choice to localStorage.
+
+**Audio**: Generate Web Audio API chimes via sine oscillators—three rising notes (C5 E5 G5) for work-done, two-note callback (E5 C5) for break-done. Each note has soft attack, long decay, and quiet octave-up partial for shimmer. Optional triangle-wave ticking at final 10 seconds when enabled.
+
+**Daily yuzu counter**: Display "N yuzu earned today" with yellow/brown SVG yuzu icon below controls. Persist per-day using localStorage with date key; auto-reset at midnight. Increment count when a Focus session completes.
+
+**UX**: Use `Date.now()` timestamp-based timing to survive tab throttling; update display ~4 times per second. Settings/theme panels close when clicking outside or pressing Escape. Show hint below counter: "A chime plays when each session ends. Space = start/pause." Responsive, centered layout.
+[distiller] finished (success)

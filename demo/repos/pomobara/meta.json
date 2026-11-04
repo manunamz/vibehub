@@ -1,0 +1,10 @@
+{
+  "name": "pomobara",
+  "description": "first real vibe-coded app",
+  "createdAt": 1793594127191,
+  "settings": {
+    "agentKind": "auto",
+    "agentModel": "default",
+    "distillerModel": "haiku"
+  }
+}

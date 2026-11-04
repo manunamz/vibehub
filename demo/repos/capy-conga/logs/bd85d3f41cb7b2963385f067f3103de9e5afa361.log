@@ -1,0 +1,94 @@
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-4-8)
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+I have a clear picture now. This is a sprite restyle across the 2D, 2.5D, and 3D renderers. Let me read the canonical palette I already have and implement the Vibybara facelift while keeping the neon glow + all gameplay intact.
+
+Let me start with the palette constants and the shared segment styling.
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Now update `segmentStyle` to carry the Vibybara body/muzzle/ear colors alongside the neon aura color:
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Now the 2D capybara sprite:
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Now extend `drawBox` to allow a glow color distinct from the fill (so bodies can be brown but keep a neon aura):
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Now the 2.5D capybara:
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Now the 3D volumetric capybara:
+[Edit] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+The Vibybara sprite facelift is complete across all three render modes. Here's what changed in `index.html`:
+
+**New palette** (pulled from `vibybara-spring.svg`): light-brown body `#d58d59`, darker muzzle `#5e3b2d`, dark ears `#2a1512`, dark headphone cups `#1e0c0b`, and yellow bolt `#ffd23f`.
+
+**Shared styling** (`segmentStyle`): now carries `body`/`muzzle`/`ear` colors alongside the existing neon aura `color`. The neon aura (cyan lead / green line) is untouched, so gameplay reads exactly as before. Ghost mode frosts the fur cyan/white and dying flashes it red/white — the state cues survive.
+
+**New helpers**: `boltPath` + `drawBolt` draw a glowing, dark-outlined lightning bolt — reused by all three views.
+
+**2D** (`drawCapy2D`): light-brown loaf with a darker blunt muzzle patch down the face, small dark ears on the body capys, serene sleepy eyes, and the lead capy's dark over-ear cups each stamped with a yellow bolt under a glowing neon band.
+
+**2.5D / 3D** (`drawCapy25D`, `drawCapyVol`): body/muzzle/ear boxes now fill with the Vibybara browns while keeping their neon glow — enabled by extending `drawBox` with an optional `glowColor` so the fur can be brown but still halo in neon. The lead capy's headphone cups are dark with a neon band, and a yellow bolt is projected onto whichever earcup faces the camera.
+
+Glow treatment, power-ups, food, particles, trails, and all gameplay/modes are unchanged — this is purely the sprite skin.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current app to understand what's actually implemented, including the Vibybara restyling.
+[Glob] **/*.html
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+[Read] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/capy-conga/code/index.html
+Let me search for the recent git commits to understand what other changes have been made recently.
+[Grep] /Users/vibybara/vibehub/data/repos/capy-conga/code
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic in a single HTML file. The game offers three distinct render modes switchable via 1/2/3 keys or start-screen buttons.
+
+**Core Gameplay:**
+- **2D/2.5D:** 20×20 grid, 24px cells; **3D:** 10×10×10 volumetric cube
+- Snake starts centered with 3 segments facing right; input buffer for up to 2 queued moves (prevents 180° turns and duplicates)
+- Arrow keys/WASD control movement; in 3D, these are camera-relative; Q/Space rise through z-axis, E/Shift dive (real vertical moves)
+- Food spawns randomly in 3D space; collision adds 1 segment, scores 10 points
+- Speed: start 150ms per move, subtract 4ms per food (min 55ms); slow-mo multiplies by 1.8× when active
+- Death on wall/self collision (tail safe if growing); screen shake on death (420ms decay, ±10px)
+
+**Vibybara Conga Line Theme:**
+- The snake is a conga line of Vibybaras (our canonical capybara character): rounded light-brown bodies (#d58d59), darker blunt muzzle patch (#5e3b2d), small dark ears (#2a1512)
+- Head capy wears dark over-ear headphones (#1e0c0b) with a yellow lightning bolt on each earcup (#ffd23f)
+- Body capybaras throw up a sideways paw to the conga beat, swaying down the line
+- Food is yuzu fruit: glowing pink citrus orb with dimples, yellow-green stem, and a leaf
+- Game over message: "THE CONGA STUMBLED"
+- Works in all three render modes (2D flat sprites, 2.5D perspective boxes, 3D volumetric capsule-shaped capys)
+
+**Three Render Modes:**
+- **2D:** Classic flat neon board with glowing cyan border, faint grid, capybara sprites with animation, pulsing yuzu food, 32% opacity trail
+- **2.5D:** Same 20×20 board through fixed perspective tilt + depth shading (farther = darker); arena has glowing cyan rim, depth-sorted rendering
+- **3D:** Full volumetric cube; snake lives in 10×10×10 space; orbitable camera (drag to rotate, scroll to zoom); wireframe cyan cage, floor shadows, pulsing ring marks current layer, elevation gauge (right side), layer readout (bottom-left); gentle auto-orbit when not dragging; depth cues: segments scale/fade with distance
+- Mode selection on start screen with buttons labeled "2D / 2.5D / 3D" (no numeric prefixes); switchable anytime via 1/2/3 keys; switching 3D mid-run restarts; one persistent high score across all modes; remember last-used mode in localStorage
+
+**Power-Ups (all modes, 3D space):**
+- Yuzu Berry (yellow orb with green leaf): slow-mo (1.8×) for 6 seconds
+- Ghost Star (5-point white star, cyan glow): phase through self for 6 seconds
+- Spawn every 6–13 seconds, exist 9 seconds, blink when <1.5s remain; spawn randomly in free 3D cells
+- Power-up HUD badges (center) with countdown timers (0.0s format), blink near expiry
+- Particle bursts (14 pink/yellow particles) on grab; world-space physics with bounce
+
+**Visual Style & Effects:**
+- Dark background (#05050a); Press Start 2P font; neon palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- Vibybara neon auras: cyan for head, green for body; underlay shows true Vibybara fur colors
+- Death animation: 650ms flashing red/white segments, descending beep (220→140→80Hz sawtooth)
+- Food eat: ascending pitch beep (880Hz + min(score, 400))
+- Power-up grab: ascending triple beep for star (740→990→1240 Hz), double for yuzu (520/390 Hz)
+- CRT scanlines overlay (3px dark lines), depth-sorted rendering
+- Ghost mode: head white, body cyan-tinted, reduced opacity with shimmer
+
+**UI & Game States:**
+- States: start, playing, paused, dying (650ms), gameover
+- HUD: score (green glow, left), power badges (center), hi-score (pink glow, right); mode tag (bottom-right)
+- Start screen: pulsing "CAPY CONGA" title (split on two lines with "CONGA" in pink), mode selector buttons, "INSERT COIN" button (yellow, blinking)
+- Pause screen: "PAUSED" title, power-up hints, "PRESS P TO RESUME"
+- **Game Over screen:** Final score and best score displayed; "NEW HI-SCORE" if applicable; two clickable buttons: "PLAY AGAIN" (green, restarts with fresh game state) and "MAIN MENU" (cyan, returns to start screen with full cleanup); keyboard shortcuts: Space/Enter for play again, M/Esc for main menu
+- Space/Enter starts from start/game-over; arrow/WASD auto-starts; P toggles pause
+[distiller] finished (success)

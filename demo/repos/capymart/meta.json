@@ -1,0 +1,11 @@
+{
+  "name": "capymart",
+  "description": "capybara lifestyle storefront",
+  "createdAt": 1793636481761,
+  "branches": {
+    "exp/dark-luxe": {
+      "from": "main",
+      "createdAt": 1793638129984
+    }
+  }
+}

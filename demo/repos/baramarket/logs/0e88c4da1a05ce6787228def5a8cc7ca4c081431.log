@@ -1,0 +1,77 @@
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-4-8)
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+The only capybara depiction in the app is the `🐹` emoji used as the header logo (line 257) — a stand-in capybara mark. Everything else (`🔍`, `🙈`, category emoji, text) is not capybara artwork. I'll replace that logo with an inline SVG rendered to match the canonical Vibybara look, and adjust the `.logo` CSS to size the SVG.
+[Edit] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+[Edit] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+Done. The only capybara artwork in the app was the header logo — a `🐹` emoji standing in for a capybara. I replaced it with an inline SVG drawn to Vibybara canon:
+
+- **Rounded light-brown head** (`#d58d59`) with a soft top highlight (`#e0a571`)
+- **Darker blunt muzzle patch** (`#704939`) running down the front of the face, with nostrils
+- **Small dark ears** (`#220c0d`) peeking above the head
+- **Serene sleepy eyes** (gentle downward lid arcs)
+- **Soft blush** on both cheeks
+- **Dark over-ear headphones** — band plus two earcups with the gold accent ring (`#c9a24a`) and a **yellow lightning bolt** (`#ffd23f`) on each cup
+
+Palette is pulled straight from `vibybara-spring.svg`. The `.logo` CSS now sizes the SVG (54×54) instead of a font glyph. Everything else — markets, listings, scan behavior, scoring, exports, the `🔍`/`🙈` state icons and category emoji (none of which depict a capybara) — is untouched.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll read the current app to understand what's been built, especially any capybara artwork changes.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+Build BaraMarket Scanner v2.0: a single-file HTML app that fetches live prediction markets from Polymarket and scores them for capybara relevance, with graceful offline fallback and clear synthetic-data labeling.
+
+## Visual Identity
+
+Display a **Vibybara** logo SVG in the header: a rounded light-brown capybara (#d58d59) with a darker blunt muzzle patch (#704939) running down the front of the face, small dark ears (#220c0d), serene sleepy curved-stroke eyes, soft peachy blush (#e8907a, opacity 0.55), and dark over-ear headphones (#1e0c0b-layered) each with a bright yellow lightning bolt (#ffd23f) on the earcup. The headphones sit atop a thin dark headband arc. Size: 54×54px SVG inline in the header next to the title.
+
+## Domain & Data
+
+Six market interest categories with capybara-relevant keywords:
+- **Herd Politics**: election, president, senate, congress, vote, trump, democrat, republican, impeach, parliament, etc.
+- **Capycoin & Crypto**: bitcoin, ethereum, crypto, dogecoin, blockchain, token, airdrop, etc.
+- **Splash Sports**: nba, nfl, super bowl, world cup, champions league, olympics, etc.
+- **Forage Economy**: fed, interest rate, inflation, gdp, recession, tariff, unemployment, stock, cpi, etc.
+- **Curious Snout (Sci & Tech)**: openai, spacex, starship, ai, gpt, nasa, nuclear, climate, hurricane, vaccine, etc.
+- **Watering Hole Gossip**: oscar, netflix, taylor swift, grammy, box office, emmy, tiktok, spotify, etc.
+
+Anti-keywords that penalize: jaguar, caiman, anaconda, crocodile, animal testing.
+
+## Data Sources
+
+**Live**: Client-side calls to `gamma-api.polymarket.com/events` (limit 75, ordered by 24h volume, active & open markets only). Parse title, tags, market question/description, outcomePrices (YES odds in cents), volume24hr. Timeout: 10s.
+
+**Offline fallback**: 16 bundled synthetic events (2028 election, Bitcoin $150k, Super Bowl LXI, Fed rates, Starship, GPT-6, etc.) clearly marked as fixtures. Used if offline or API fails. Display prominent red warning: "⚠ OFFLINE / SYNTHETIC MODE — the live Polymarket feed could not be reached. Everything below is synthetic sample data..."
+
+## UI (dark theme, monospace)
+
+Header: Vibybara logo + "BARAMARKET SCANNER v2.0" + "scanning live polymarket prediction feeds for capy-relevant action since 2026". Top-right: **source badge** (green "● live · gamma-api.polymarket.com" or red "⚠ synthetic sample data").
+
+Controls: START SCAN / RESCAN button, min-relevance threshold dropdown (30/50/70/90%), search input, JSON/CSV export buttons, progress bar, console log (monospace, scrollable).
+
+Stats grid: feeds scanned, markets crawled, capy matches, top category.
+
+Category filter: 6 toggleable chips, all active by default.
+
+Results: market cards with product tables (market question, matched keywords, category tag, YES odds in cents, 24h volume, relevance %). Score pills: 70%+ green, 45-69% yellow, <45% red. Synthetic markets tagged.
+
+## Core Features
+
+**Fetch engine**: acquireFeeds() tries live gamma-api call first; on failure (network/timeout) or navigator.onLine = false, falls back to SAMPLE_EVENTS. Logs state.
+
+**Scan**: Sequentially process feeds with simulated delays (120–280ms per feed, 40–100ms per market). Score each market. Log progress in real-time.
+
+**Scoring**: Search question+description for keywords, sum weights by category, subtract anti-keyword penalties, clamp 0–100%. Bonus: if score > 0, add Math.min(18, log₁₀(volume+1)×3) for busy markets. Match if ≥threshold AND has a top category.
+
+**Filters**: Results filter by active categories and text search. Update on category chip toggle or search input.
+
+**Source UI**: updateSourceUI() sets sourceBadge and syntheticBanner visibility. Live = green badge + hidden banner. Sample = red badge + visible warning.
+
+**Exports**: JSON (baramarket-scan.json) and CSV (baramarket-scan.csv) include dataSource field ('gamma-api.polymarket.com' or 'synthetic-sample-fixtures') and synthetic boolean flag.
+
+**Empty states**: Before scan: "🔍 no scan data yet — the capybaras are waiting patiently". After scan with no matches: "🙈 no matches under current filters — widen the categories or clear the search".
+[distiller] finished (success)

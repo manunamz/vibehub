@@ -1,0 +1,64 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: Build a recipe box app where you can paste and organize recipes with tags, then get a random dinner suggestion with a fun spinning picker button when you're indecisive. Style it with warm, cozy kitchen vibes.
+
+PLAN:
+- Recipe input form (paste recipe text, auto-parse or free-form storage)
+- Tag system (weeknight, fancy, soup, etc.) with search/filter UI
+- Random picker feature with spin animation as the hero action
+- Warm color palette and kitchen aesthetic (earthy tones, comfortable typography)
+- Storage layer (local or cloud-backed for persistence across sessions)
+[ramble] finished (success)
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+[Glob] **/*
+The repo is empty, so I'll build the whole app as a single self-contained `index.html` — recipe storage in localStorage, tag filtering, and a spinning dinner picker with cozy kitchen styling.
+[Write] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+The recipe box app is built. It's a single self-contained `index.html` with no dependencies, ready to preview in a browser.
+
+What it includes, mapped to the plan:
+
+- **Recipe input form** — paste any recipe text free-form with a name and tags. If you skip the name, it auto-grabs the first line of the pasted text as the title.
+- **Tag system** — comma-separated tags on entry, rendered as a clickable tag cloud with counts. Filters combine (AND logic) and stack with a live full-text search box; a Clear button resets both.
+- **Spinning picker as the hero** — the "Spin for Dinner!" button sits front and center. It rapidly flips through recipe names with an easing slowdown (like a wheel losing momentum), then pops the winner card with a burst of ingredient confetti (🧄🥕🌿). The spinner respects your active filters, so you can filter to "weeknight" and spin within just those. A "peek at the recipe" link opens the full recipe.
+- **Warm kitchen aesthetic** — cream and terracotta palette with sage and butter accents, Georgia serif typography, a gingham border strip up top, dashed "recipe card" borders, and cozy microcopy throughout ("Tuck it in the box").
+- **Persistence** — everything saves to localStorage and survives reloads. On first visit it seeds two starter recipes (tomato orzo, chicken soup) so the spinner works immediately; deleting them is remembered too.
+
+Recipes open in a modal for full reading, with delete (confirmation-guarded) available there. Empty states and no-match-filter states are both handled, and the layout collapses to a single column on mobile.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Glob] **/*
+[Glob] *.{html,js,jsx,ts,tsx,css,json}
+[Read] /Users/vibybara/vibehub/data/repos/recipe-box/code/index.html
+Build a recipe box app where users paste and organize recipes with tags, then spin a button to get random dinner suggestions.
+
+## Features
+
+**Recipe Input**: A form to add recipes by pasting text (ingredients, steps, links, notes). Users enter a recipe name or it auto-guesses from the first non-empty line of pasted text. Tags are comma-separated (e.g., "weeknight, soup, vegetarian"). Recipes save to localStorage automatically.
+
+**Recipe Display**: Cards in a scrollable list showing recipe name, 2-line text preview, and tag chips. Clicking any card opens a modal with the full recipe text, all tags, and a delete button. Seed the app on first visit with two starter recipes (One-Pot Tomato Orzo and Lazy Sunday Chicken Soup) so it feels alive.
+
+**Tag Cloud & Filtering**: Display all tags with recipe counts. Users can click tags to filter (AND logic—selecting "soup" and "weeknight" shows only recipes with both). A search box filters by recipe name, text content, or tags. Show a "Clear" button when filters are active. Display a count line ("3 recipes in the box" or "Showing 2 of 5").
+
+**The Spinner Hero**: A "Spin for Dinner!" button with a 🥘 icon in a prominent hero section. Clicking it picks a random recipe from the filtered list (or all recipes if no filters). The button animates through recipe names with easing-out delays, then reveals the winner in a card with a "peek at the recipe" link and confetti (🧄 🧅 🥕 🌿 🧂 🍅 ✨) falling. The spinner respects active search/tag filters.
+
+**Design**: Warm, cozy kitchen aesthetic with:
+- Color palette: cream (#faf3e7), paper white (#fffaf1), terracotta (#c0603a), butter gold (#f2c879), sage green (#8a9b6e), cocoa brown (#4a352a)
+- Serif typography (Georgia) for a handwritten-recipe feel
+- Gingham pattern top border (red & cream check)
+- Soft shadows and rounded corners
+- Two-column layout (input form left, recipe list right; responsive to single column on mobile)
+- Paper-like cards with dashed or solid borders
+- Accessible buttons with hover/active states
+
+## Technical Details
+
+- Single-file HTML/CSS/JS app (no build step)
+- localStorage for persistence (key: "recipe-box-v1")
+- Vanilla JS (no frameworks)
+- Graceful empty states with helpful emoji & text
+- Modal overlay with ESC-to-close and click-outside-to-close
+- Responsive design for mobile and desktop
+[distiller] finished (success)

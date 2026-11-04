@@ -1,0 +1,86 @@
+[vibehub] agent mode: claude
+[agent] session started (claude-fable-5)
+I'll start by reading the current game and the reference 3D implementation.
+[Glob] **/*
+[Glob] /Users/vibybara/vibehub/data/repos/snake-game/code
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+Now let me read the reference 3D snake game.
+[Read] /Users/vibybara/vibehub/data/repos/snake-game/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/snake-game/code/snake-logic.js
+[Write] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+The merge is done — the game is now a single self-contained `index.html` with three render modes sharing one game engine, one hi-score, and all the arcade juice.
+
+What changed:
+
+- **Mode select on the INSERT COIN screen**: three neon buttons (1·2D / 2·2.5D / 3·3D), and keys **1/2/3 switch the view at any time** — even mid-game, since all three modes render the same live game state. The last-used mode persists in `localStorage` (`neonSnakeMode`), and the hi-score stays a single shared key across all views. A small "VIEW 2.5D"-style tag sits in the frame corner so you always know which mode you're in.
+
+- **2D mode is untouched**: same translucent-clear motion trails, pulsing diamond food, chunky eyes, grid — the classic game plays exactly as before.
+
+- **2.5D mode**: the same 20×20 board rendered through a fixed perspective-tilted camera. Snake segments become low extruded neon boxes, grid lines and cells get depth shading (far rows fade toward black), and the board sits on a slab with a glowing cyan rim.
+
+- **3D mode**: a full software-perspective 3D renderer written from scratch in canvas 2D — no THREE.js, no external dependencies, so `index.html` stays the sole entry point. It has an orbit camera ported from the reference game (drag to orbit, scroll to zoom, phi clamped above the board), camera-relative steering (arrow-up always means "away from you," snapped to the dominant board axis, exactly like the reference's `cameraForwardAxis` logic), tall glowing snake boxes with per-face shading and painter's-algorithm depth sorting, and billboard-projected food/power-ups.
+
+- **Neon polish ported everywhere, especially 3D**: glowing floor-trail quads where the tail just vacated (replacing the 2D translucent-clear trick, which can't survive a moving camera), screen shake on crash, the red/white death flash, ghost-mode transparency pulse, world-space 3D particles that pop upward and bounce off the floor, pulsing pink food diamond, bobbing yuzu/star sprites with expiry blink — all rendered through the projection. The pixel-font HUD, slow-mo/ghost countdown badges, speed ramp, and P pause overlay are shared DOM/logic and work identically in every mode.
+
+One design note: particles were refactored from pixel space into world space so a single particle system feeds all three renderers (the 2D view just maps world coordinates back to board pixels, with height shown as a slight upward lift).
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll examine the current codebase and the reference 3D implementation to write an accurate distilled prompt.
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/neon-snake/code'
+[Glob] /Users/vibybara/vibehub/data/repos/neon-snake/code
+[Read] /Users/vibybara/vibehub/data/repos/neon-snake/code/index.html
+[Read] /Users/vibybara/vibehub/data/repos/snake-game/code/index.html
+Build a complete retro arcade Snake game in HTML/CSS/JavaScript with neon aesthetic in a single HTML file. The game offers three distinct render modes switchable via 1/2/3 keys or start-screen buttons.
+
+**Core Gameplay (all modes):**
+- 20×20 grid, 24px cells (2D/2.5D); 20×20 board with perspective camera (3D)
+- Snake starts center with 3 segments facing right; arrow keys/WASD control (camera-relative in 3D)
+- Input buffer: up to 2 queued moves; prevent 180° turns and duplicates
+- Food spawns randomly; collision adds 1 segment, scores 10 points
+- Speed: start 150ms per move, subtract 4ms per food (min 55ms)
+- Death on wall collision or self-collision (tail safe if growing); screen shake on death (420ms decay, ±10px)
+
+**Three Render Modes:**
+- **2D:** Classic flat neon game (untouched from original)
+- **2.5D:** Same board through perspective tilt + depth shading (isometric-style 3D-ified view)
+- **3D:** Full perspective 3D with orbitable camera (drag to rotate, scroll to zoom); 3D board, floating arena with glowing rim, lighting and shadows
+- Mode selection on INSERT COIN start screen; switchable anytime via 1/2/3 keys
+- One persistent high score shared across all modes; remember last-used mode in localStorage
+
+**Power-Ups (all modes):**
+- Yuzu Berry (yellow/green orb): slow-mo (1.8× tick multiplier) for 6 seconds
+- Ghost Star (white 5-point star, cyan glow): phase through self for 6 seconds
+- Spawn every 6–13 seconds, exist 9 seconds, blink when <1.5s remain
+- Power-up HUD badges (center) with countdown timers (0.0s format); blink near expiry
+- Particle bursts (14 pink/yellow particles) on grab; sound: ascending triple beep (740→990→1240 Hz) for star, double beep for yuzu
+
+**Visual Style (Neon Arcade Everywhere):**
+- Dark background (#05050a); Press Start 2P font (chunky retro)
+- Neon palette: green (#39ff14), pink (#ff2ec4), cyan (#00f0ff), yellow (#ffee00)
+- **2D:** Cyan glowing canvas border, faint grid overlay; snake head cyan with glow, body fades green; food pulsing pink diamond; chunky pixel eyes on head; 32% opacity canvas clearing for trails
+- **2.5D/3D:** Perspective board with depth shading (farther = darker); dark arena background; glowing cyan rim; grid overlay; snake segments scale with depth; particles and food bob in world space; all geometry depth-sorted
+- Ghost mode colors: head white, body cyan; reduced opacity with shimmer effect
+- CRT scanlines overlay (3px dark lines) across entire page
+
+**Effects & Feedback:**
+- Particle burst: 14 pink/yellow radiating particles (~450ms) on food/power-up eat
+- Death animation: 650ms flashing (80ms intervals) red/white segments
+- Audio: start (660Hz, 880Hz), food pitch rises with score, death (220→140→80Hz sawtooth descending)
+
+**UI & States:**
+- States: 'start', 'playing', 'paused', 'dying' (650ms), 'gameover'
+- HUD: score (green glow, left), power badges (center), hi-score (pink glow, right); mode tag (bottom-right, "VIEW 2D/2.5D/3D")
+- Start screen: pulsing "NEON SNAKE" title (green+pink), mode selector buttons, "INSERT COIN" button (yellow, blinking), control hints
+- Pause screen: "PAUSED" title, power-up hints, "PRESS P TO RESUME" prompt
+- Game Over screen: final score, best score, "NEW HI-SCORE" badge (if applicable)
+- Space/Enter starts from start/game-over; arrow/WASD auto-starts from start screen
+- P toggles pause; pause freezes rendering but power-up timers continue
+
+**3D Implementation (canvas/WebGL, no THREE.js):**
+- Self-contained perspective math: camera orbit, orthographic projection, depth sorting
+- Depth fade: far objects darken toward black; near objects bright
+- Render depth-sorted drawables (snake, food, particles) to ensure correct layering
+[distiller] finished (success)

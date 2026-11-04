@@ -1,0 +1,9 @@
+[vibehub] agent mode: claude
+The pomodoro app is built — a single self-contained `index.html` with no external assets, ready to preview in a browser.
+
+What it includes:
+
+- **Big circular countdown**: an SVG ring that drains smoothly as time passes, with the time, phase label, and pomodoro count in the center. The ring and accent color shift from red (work) to green (break).
+- **Work/break cycles**: 25-minute work and 5-minute break defaults, plus a 15-minute long break after every 4 pomodoros. All four values are configurable via the settings panel, and sessions auto-advance so cycles flow continuously.
+- **Satisfying chime via WebAudio**: a soft bell with an octave shimmer partial — a rising C-E-G arpeggio when work ends, a gentler two-note descent when a break ends. No audio files needed; the AudioContext is unlocked on the first Start click so browsers allow playback.
+- **Extras**: Start/Pause/Resume, Skip, and Reset buttons, spacebar to toggle, the remaining time mirrored in the tab title, and a timestamp-based timer (rather than counting intervals) so it stays accurate even when the browser throttles background tabs.

@@ -1,0 +1,19 @@
+{
+  "b719060d388bb124d9fbafda4cc18595927113e2": {
+    "vibeSha": "b719060d388bb124d9fbafda4cc18595927113e2",
+    "file": "vibes/0001.md",
+    "prompt": "Build a YouTube-style video platform that curates only videos repeatedly recommended on Hacker News over the years.",
+    "plan": "- Source HN video recommendations via API scraping or historical data\n- Track videos mentioned multiple times across posts/comments to identify repeat endorsements\n- Build a YouTube-like interface with video browsing, categories, and playback\n- Embed or link to the original videos with HN context (mentions, discussion threads)",
+    "branch": "main",
+    "ramble": "Hi Claude good morning how are you I'm great thx build me a YouTube-style site but restricted to videos that have been repeatedly recommended on HN over the years pls. Don't make any mistakes.",
+    "state": "done",
+    "createdAt": 1793608006938,
+    "startedAt": 1793610039495,
+    "codeCommit": "62b7a99e6df6d6b826ed878aca7bfce05d0d327d",
+    "summary": "The app is built — a single self-contained `index.html` (\"HackTube\") that works end to end when opened in a browser.\n\nWhat it does:\n\n- **Curated HN canon as the dataset.** Since HN has no \"videos\" API dimension, the catalog is a hand-curated set of 41 videos that are genuinely re-submitted and re-recommended on Hacker News year after year — Bret Victor's \"Inventing on Principle\", Hamming's \"You and Your Research\", the Mother of All Demos, Rich Hickey's talks, Karpathy's GPT-from-scratch, \"The Expert\", KRAZAM's \"Microservices\", Ben Eater's 6502 build, and so on. Each entry carries title, speaker, year, duration, category, a description, an estimated HN mention count, and a \"Why it's HN canon\" note explaining its repeat-endorsement history.\n- **Live HN data for the \"repeat mentions\" evidence.** On each watch page the app queries the Algolia HN Search API (CORS-enabled, no key needed) for real submissions of that video — matched by YouTube ID in the URL and by title — deduplicates them, filters to genuine matches, and lists the top threads with points, comment counts, date, and direct links to the `news.ycombinator.com` discussions, plus an \"all HN results\" search link. If the API is unreachable it degrades gracefully to a direct HN search link.\n- **YouTube-style interface.** Dark theme, fixed header with search, category sidebar with per-category counts (Programming, Computer History, AI & ML, Science, Hardware, Talks, Tech & Society, Documentaries, Culture), sticky filter chips, sort control (most HN mentions / newest / oldest / A–Z), and a responsive card grid with real YouTube thumbnails, duration badges, and an \"HN mentions\" pill on every card.\n- **Playback with context.** Clicking a card routes to `#/watch/<id>` (back button works) with an embedded `youtube-nocookie` player, metadata, the HN discussion panel, and a \"More HN classics\" related-videos rail that prioritizes the same category.\n\nEverything runs from the one file — no build step, no dependencies — so it previews directly in a browser.",
+    "agentModel": "claude-fable-5",
+    "finishedAt": 1793610397324,
+    "distill": "done",
+    "distillSha": "470693d9a904dd91a0dfbb579f9c9c1427356144"
+  }
+}

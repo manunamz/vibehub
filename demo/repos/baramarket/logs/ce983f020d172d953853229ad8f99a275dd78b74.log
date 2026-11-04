@@ -1,0 +1,78 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-4-5-20251001)
+PROMPT: Create a market scanner that discovers markets and products of interest to capybaras.
+PLAN:
+- Define capybara product categories (food, habitat, enrichment items, etc.)
+- Build a scanner to crawl markets and product databases
+- Filter results by capybara relevance
+- Display or export matched markets and products
+[ramble] finished (success)
+[vibehub] coding agent: claude
+[agent] session started (claude-fable-5)
+[Glob] *
+[Glob] **/*.html
+[Write] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+The app is built. Since the directory was empty, I created a single self-contained `index.html` — the BaraMarket Capybara Market Scanner — which covers all four plan items:
+
+- **Capybara product categories**: six interest categories are defined (Food & Forage, Habitat & Shelter, Aquatic & Swimming, Enrichment & Play, Grooming & Wellness, Social & Companionship), each with weighted relevance keywords, plus anti-keywords (cages, predators, electronics) that penalize a listing's score.
+- **Scanner**: pressing START SCAN runs an animated async crawl over seven built-in market feeds (Pantanal Wholesale Exchange, Izu Onsen Supply Co., Rodent Republic Online, etc. — 35 listings total), with a live console log, progress bar, and running stats for markets scanned, listings crawled, and matches found.
+- **Relevance filtering**: each listing gets a 0–100% capy score from the keyword engine; a configurable threshold (30/50/70/90%) decides what counts as a match, and after the scan you can further filter by category chips or free-text search (e.g. "melon", "pool").
+- **Display & export**: matches render as per-market cards with product tables showing category, price, score pill, and the keywords that matched; the current filtered view can be downloaded as JSON or CSV.
+
+Opening `index.html` in a browser is all that's needed to preview it — no build step or dependencies.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+I'll explore the codebase to understand what was actually built.
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code
+[tool error] EISDIR: illegal operation on a directory, read '/Users/vibybara/vibehub/data/repos/baramarket/code'
+[Glob] *.{js,ts,tsx,jsx,html,json}
+[Read] /Users/vibybara/vibehub/data/repos/baramarket/code/index.html
+Looking at the codebase, I can see a fully-functional single-file HTML app implementing a capybara market scanner. Let me write the distilled prompt:
+
+---
+
+Build BaraMarket Scanner: a single-file HTML app (index.html) that discovers and scores markets & products for capybara relevance.
+
+## Domain & Data
+
+Define 6 capybara interest categories with weighted keyword scoring:
+- **Food & Forage**: melons, grass, hay, bamboo, corn, lettuce, carrots, vegetables, pellets
+- **Habitat & Shelter**: mud, wallow, burrow, shade, hut, bedding, straw, riverbank, marsh
+- **Aquatic & Swimming**: pool, pond, water, swim, float, bath, hotspring, onsen, splash, lagoon, river
+- **Enrichment & Play**: toy, chew, puzzle, ball, tunnel, scratch, forage, log, rope, climb, treat
+- **Grooming & Wellness**: brush, groom, fur, comb, spa, massage, dental, shampoo
+- **Social & Companionship**: friend, flock, duck, bird, perch, herd, companion, chill, zen, calm
+
+Also define anti-keywords that penalize relevance: cat, dog, leash, cage, predator, jaguar, caiman, electronics, phone.
+
+Create 7 hardcoded market feeds (Pantanal Wholesale, Izu Onsen, Chiguiro Store, Rodent Republic, São Paulo Farmers, Zen Garden Depot, Everglade Outfitters), each with 5 sample product listings (title, description, price in capycoins).
+
+## UI (dark theme, monospace font)
+
+Header: capybara emoji + "BARAMARKET SCANNER v1.0" title + tagline.
+
+Control panel: START SCAN button, min-relevance threshold dropdown (30/50/70/90%), search input, JSON/CSV export buttons, progress bar, console log output.
+
+Stats grid: markets scanned, listings crawled, capy matches, top category.
+
+Category filter: 6 chips (one per category), toggleable, all active by default.
+
+Results section: market cards with product tables (title, matched keywords, category tag, price, relevance score pill). Score pills color-coded: 70%+ green, 45-69% yellow, <45% red.
+
+## Core Features
+
+**Scan engine**: async scan button crawls all markets sequentially with simulated per-listing delays (~60-90ms) and per-market connection delays (~220-480ms). Log real-time progress to console.
+
+**Scoring**: for each listing, search title+description for keyword matches, sum weights by category, subtract anti-keyword penalties, clamp to 0-100%. Match if above threshold AND has a top category.
+
+**Filtering**: results filter by active categories, min threshold, and text search (query matches product title/description/matched keywords).
+
+**Exports**: JSON (baramarket-scan.json) and CSV (baramarket-scan.csv) with market metadata and product details.
+
+**UI state**: search input disabled until scan completes; export buttons disabled if no matches; stats update live during scan; results sorted by relevance per market; empty state shows "🔍 waiting" or "🙈 no matches" depending on state.
+
+---
+[distiller] finished (success)

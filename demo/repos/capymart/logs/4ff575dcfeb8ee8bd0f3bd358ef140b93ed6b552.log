@@ -1,0 +1,86 @@
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-4-8)
+I'll start by reading the canonical Vibybara reference and exploring the current shop files.
+[Read] /Users/vibybara/vibehub/public/vibybara-spring.svg
+[Glob] **/*
+[Read] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Now I understand the structure. Let me identify the capybara artwork:
+
+- **Logo mark** (header, lines 640–651) — a capy
+- **Hero mascot** (lines 673–715) — capy soaking in a hot spring
+- **Checkout modal capy** (lines 752–763) — a capy
+- **Empty-cart capy** (lines 1068–1076) — a muted capy
+
+The six *products* (bath bombs, headphones, towel, pebbles, grass, cassette) don't depict capybaras, so they stay untouched. Only `index.html` exists in this directory (no separate theme files to sync). Let me update each capy to Vibybara canon: light-brown body, blunt muzzle patch down the face, small dark ears, sleepy eyes, dark over-ear headphones with a yellow lightning bolt, soft blush, and the spring-blue palette.
+[Edit] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Now the hero mascot:
+[Edit] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Now the checkout modal capy:
+[Edit] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Now the empty-cart capy — keeping it muted/desaturated but on-brand:
+[Edit] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Let me verify no capy artwork was missed and products are untouched:
+[Grep] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+All four capybara illustrations now follow Vibybara canon. Here's what changed in `index.html`:
+
+| Artwork | Update |
+|---|---|
+| **Header logo** | Light-brown head (`#d58d59`), blunt muzzle patch down the face (`#704939`), small dark ears, sleepy eyes, soft blush, and dark over-ear headphones with a yellow lightning bolt on the earcup |
+| **Hero mascot** (hot-spring soak) | Same canonical face + headphones (bolt on both earcups), muzzle patch, yuzu now rests on the crown atop the headband, and the water shifted to the canonical spring-blue palette (`#4a9cc9`/`#7cc4e6`) with matching ripples |
+| **Checkout modal capy** | Rebuilt to match the logo — muzzle patch, sleepy eyes, headphones + bolt |
+| **Empty-cart capy** | Redrawn with the canonical silhouette (muzzle patch, sleepy eyes, faint headphones + bolt) but kept muted/greyed to read as "empty" |
+
+**Left untouched, as instructed:**
+- The six products — bath bombs, headphones, towel, pebbles, grass, cassette — none depict a capybara, so they're unchanged. (The "Tiny Headphones" product is just headphones, not a capy.)
+- The `--capy` CSS accent variable (used for text/button tinting, not an illustration) and all other markup/logic.
+
+Only `index.html` exists in this directory — there are no separate theme files here to keep in sync. (There's an `exp/dark-luxe` git branch, but it's a separate branch I can't touch without git; if you want the same treatment applied there, check it out and I'll run this again.)
+
+All edits are inline SVG, so the shop previews end to end with no external assets.
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-4-5-20251001)
+[Glob] **/*.{html,js,css,svg}
+[Read] /Users/vibybara/vibehub/data/repos/capymart/code/index.html
+Build a capybara lifestyle goods storefront as a single HTML file (no build step). The shop features 6 inline-SVG products: Yuzu Bath Bombs ($14), Tiny Headphones ($32), Hot-Spring Towel ($18), Zen Pebble Set ($24), Artisanal Grass Snacks ($9), and Lofi Cassette ($12). All product art must be drawn in CSS/inline SVG—no external images.
+
+**Design & Layout:**
+- Use a warm, minimal color palette: cream backgrounds, serif display font (Didot/Playfair Display) for logo and headings, teal accents, brown capy tones
+- Header: sticky, with **Vibybara logo** (capybara mark + "CapyMart" in serif, italic "Mart"), tagline "Pursue the unbothered life" (hide on mobile), and cart button with item count badge
+- Hero: split layout—text left (headline, description), right side shows **Vibybara soaking in a hot spring** with a yuzu on its head
+- Product grid: responsive auto-fill layout (280px minimum), cards with SVG art backgrounds, title, short description, price, and "Add to Cart" button
+- Cards are clickable to open a product detail modal
+- Footer with copyright text
+
+**Vibybara Canonical Art (used for logo, hero mascot, and UI icons):**
+Rounded light-brown capybara (#d58d59) with small dark ears (#3a241c), darker blunt muzzle patch (#704939) down the front of the face, serene sleepy eyes (curved stroke paths, never dots), dark nose and mouth (#1e0c0b), soft peachy blush on cheeks. Dark over-ear headphones (#1e0c0b body, #c9a24a band rim) with yellow lightning bolt (#ffd23f) on each earcup. Use this for: header logo (40×40px), hero section capybara (scaled larger), checkout modal icon, and empty-cart icon.
+
+**Product Detail Modal (on card click):**
+- Shows full-size SVG art at top
+- Product name (large serif heading)
+- Short description text
+- Extended details text (longer description unique to each product)
+- Price and "Add to Cart" button at bottom
+- Close button (×) in top right
+- Backdrop closes modal on click outside; Escape key closes modal
+
+**Cart Drawer (slide from right):**
+- Shows cart items with product thumbnails (small SVG), name, unit price, quantity controls (+/−), remove link, and line total
+- Empty state shows sad capybara icon + message
+- Footer displays running total and disabled "Checkout" button (enabled only when cart has items)
+- Close button (×) or click overlay to dismiss
+
+**Checkout Modal (modal with backdrop):**
+- Order summary: lists each item with quantity and line total, shows subtotal, free shipping, grand total
+- Discount code section: input field + "Apply" button; supports CAPY10 code for 10% off; shows success/error message and applies discount to total
+- Buttons: "Keep Browsing" (closes modal and drawer) and "Place Order"
+- After placing order: shows confirmation message with fake order number (CAPY-XXXX format), mentions savings if discount was applied, hides the Place Order button
+
+**Interactions:**
+- "Add to Cart" button flashes "Added ✓" state for 900ms, then resets
+- Toast notification slides up from bottom when item added, auto-dismisses after ~2s
+- Quantity controls update cart in real-time; remove removes item entirely
+- Escape key closes modals/drawer with priority: checkout modal first, then detail modal, then drawer
+- Smooth transitions and hover effects throughout
+[distiller] finished (success)

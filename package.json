@@ -1,0 +1,44 @@
+{
+  "name": "vibehub",
+  "version": "0.1.0",
+  "description": "A GitHub clone where humans commit prompts & plans and agents commit the code in parallel",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "demo": "node server.js --demo",
+    "export": "node export.js",
+    "build:site": "node build-site.js",
+    "seed": "node seed.js",
+    "pack:demo": "node pack-demo.js",
+    "test": "node --test \"test/unit/*.test.js\" \"test/feat/*.test.js\"",
+    "test:unit": "node --test \"test/unit/*.test.js\"",
+    "test:feat": "node --test \"test/feat/*.test.js\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "keywords": [
+    "capybara",
+    "git",
+    "github",
+    "vibe",
+    "vibe code",
+    "vibe coding",
+    "version control",
+    "ai",
+    "ai agents",
+    "agentic coding",
+    "coding agent",
+    "llm",
+    "claude",
+    "claude code",
+    "prompt",
+    "prompts",
+    "prompt engineering",
+    "prompt versioning",
+    "prompt management",
+    "code generation",
+    "developer tools"
+  ]
+}

@@ -1,0 +1,81 @@
+[vibehub] ramble cleanup mode: claude
+[ramble] session started (claude-haiku-5-5)
+PROMPT: Make 3D mode slightly easier and enlarge its playspace so it feels closer to the 2D and 2.5D versions.
+PLAN:
+- Locate the 3D mode's difficulty settings (e.g., speed, tick rate, or spawn/obstacle parameters) and reduce difficulty slightly.
+- Find the 3D playspace bounds (arena size or grid dimensions) and increase them.
+- Compare against the 2D and 2.5D constants so the 3D values land closer to theirs.
+- Playtest all three modes to confirm 3D feels a bit easier and roomier without breaking controls or collisions.
+[ramble] finished (success)
+[vibehub] coding agent: claude
+[agent] session started (claude-opus-5-5)
+[Glob] **/*
+[Grep] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Grep] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Edit] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+The cube is bigger and 3D is slower now. I'm checking the camera/projection code for any leftover assumptions about the old 10-cell size.
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Grep] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+I made 3D mode a bit easier and gave it a bigger cube; 2D and 2.5D work exactly as before. I haven't playtested it. I could only edit files here, so nothing was run in a browser.
+
+**Bigger playspace** (`index.html`)
+- The 3D cube goes from 10×10×10 to **14×14×14**. That's 2.7× the volume, and each layer now has 196 cells, about half of the 400 on the flat 20×20 board. I stopped at 14 because a 20-cell cube gets hard to read in the wireframe view.
+- I moved the default camera back (distance 20 → 28) so the whole cube still fits on screen, and widened the scroll-zoom limits from 13–34 to 18–46.
+- The layer gauge on the right side of the 3D view grows to fit the 14 layers.
+- The start-screen hint now says "14×14×14 CUBE".
+
+**Slightly easier, 3D only**
+
+| | 2D / 2.5D | 3D before | 3D now |
+|---|---|---|---|
+| Starting speed (ms per move) | 150 | 150 | **175** |
+| Speed-up per food | −4 ms | −4 ms | **−3 ms** |
+| Top speed (ms per move) | 55 | 55 | **75** |
+
+The 3D settings sit in their own constants next to the existing ones, so they're easy to adjust. Wall and self collisions, the arrow-key steering (which follows the camera angle), and the rise/dive keys all read the cube size, so they work with the larger cube without other changes.
+
+When you try it, check that the cube fits the screen at the default zoom and that 3D feels less rushed. If it now feels too slow or too empty, lower `BASE_TICK_3D` or `SIZE3` (a 12-cell cube would sit in between).
+[agent] finished (success)
+
+[vibehub] distiller mode: claude
+[distiller] session started (claude-haiku-5-5)
+[Glob] **/*
+[Bash] cd /Users/vibybara/vibehub/data-demo/repos/capy-conga/code && git show --stat HEAD && git show HEAD -- . | head -200
+[tool error] <tool_use_error>Error: No such tool available: Bash. Bash is disabled for this session, in subagents as well as here.</tool_use_error>
+[Grep] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Read] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+[Grep] /Users/vibybara/vibehub/data-demo/repos/capy-conga/code/index.html
+Build a single-file retro arcade Snake game (`index.html`, HTML/CSS/JavaScript, no libraries) with a neon aesthetic. Press Start 2P font, dark background (#05050a), neon palette: green #39ff14, pink #ff2ec4, cyan #00f0ff, yellow #ffee00. A CRT scanline overlay (3px dark lines) covers the screen.
+
+**Render modes:** 2D, 2.5D, and 3D, chosen by buttons labeled "2D / 2.5D / 3D" (no numeric prefixes) on the start screen, or by 1/2/3 keys at any time. Remember the last mode in localStorage. Switching into or out of 3D mid-run restarts the game. One persistent high score is shared across modes.
+
+**Board sizes:**
+- 2D and 2.5D: 20×20 grid, 24px cells, one layer.
+- 3D: a roomy 14×14×14 volumetric cube. The snake moves in full 3D. Q/Space rises and E/Shift dives (real vertical moves). Walls include floor and ceiling.
+
+**Controls:** Arrows/WASD move. In 3D, steering is camera-relative. Input buffers up to 2 queued moves and rejects 180° turns and duplicates. P toggles pause. Space/Enter starts from the start or game-over screens. Arrow/WASD also auto-starts.
+
+**Speed:**
+- 2D/2.5D: starts at 150ms per move, minus 4ms per food, floor 55ms.
+- 3D: starts at 175ms, minus 3ms per food, floor 75ms. It is deliberately gentler than 2D.
+- Yuzu slow-mo multiplies the interval by 1.8×.
+
+**3D view:** Drag to orbit, scroll to zoom (zoom range 18–46). A gentle auto-orbit runs when not dragging. Draw a wireframe cyan cage with a glowing rim, a faint floor grid, and floor shadows. A pulsing ring marks the current layer. Show an elevation gauge on the right and a layer readout bottom-left. Segments scale and fade with distance. Show a brief control hint that fades after about 5 seconds.
+
+**Vibybara conga theme:** The snake is a line of capybaras. The head has dark over-ear headphones (#1e0c0b) with yellow lightning bolts (#ffd23f). Bodies are light brown (#d58d59) with a darker muzzle (#5e3b2d) and dark ears (#2a1512). Body capys throw up a paw to the beat. Food is a pulsing pink yuzu with dimples, stem, and leaf. Death text is "THE CONGA STUMBLED".
+
+**Power-ups:** Yuzu Berry slows time for 6s. Ghost Star lets the snake pass through itself for 6s. Each spawns every 6–13s, lasts 9s on the board, and blinks in the last 1.5s. Spawns land on free cells. Grabbing one emits 14 particles and shows a countdown badge (0.0s format) in the top center.
+
+**Game states:** start, playing, paused, dying (650ms red/white flashing, descending sawtooth beep 220→140→80Hz, screen shake ±10px decaying over 420ms), and gameover. Eating plays an ascending beep. The start screen shows a pulsing title with "CONGA" in pink, mode buttons, and a blinking yellow "INSERT COIN" button. Game over shows the score, best score, and "NEW HI-SCORE" when earned, plus "PLAY AGAIN" (green) and "MAIN MENU" (cyan). M/Esc goes to the menu.
+[distiller] finished (success)
