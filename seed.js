@@ -42,6 +42,21 @@ function restoreHistory(bundle, dest, who) {
   git(dest, 'checkout', '-q', '-f', def);
 }
 
+// Branches are served from per-branch git worktrees. The bundles restore only
+// the refs, so recreate a worktree for every non-main branch (in both the code
+// and vibes histories) — otherwise branchExists() is false and the app 404s on
+// that branch, which aborts the static export.
+function materializeBranches(repoOut) {
+  const vibesPath = path.join(repoOut, 'vibes');
+  if (!fs.existsSync(vibesPath)) return;
+  const heads = execFileSync('git', ['for-each-ref', '--format=%(refname:short)', 'refs/heads'], { cwd: vibesPath })
+    .toString().trim().split('\n').filter(Boolean).filter((b) => b !== 'main');
+  for (const b of heads) {
+    git(path.join(repoOut, 'code'), 'worktree', 'add', path.join(repoOut, 'worktrees', b, 'code'), b);
+    git(vibesPath, 'worktree', 'add', path.join(repoOut, 'worktrees', b, 'vibes'), b);
+  }
+}
+
 // Reconstruct `dataDir` from the bundle seed at `demoDir`. Returns repo names.
 function seed({ dataDir, demoDir = DEFAULT_DEMO, force = false } = {}) {
   dataDir = path.resolve(dataDir);
@@ -77,6 +92,7 @@ function seed({ dataDir, demoDir = DEFAULT_DEMO, force = false } = {}) {
       const bundle = path.join(src, `${hist}.bundle`);
       if (fs.existsSync(bundle)) restoreHistory(bundle, path.join(out, hist), IDENTITY[hist]);
     }
+    materializeBranches(out);
   }
   return repos.sort();
 }
