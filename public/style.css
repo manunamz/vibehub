@@ -485,6 +485,8 @@ pre.log-full {
   font-size: 13px;
 }
 .plan-body pre { background: var(--bg3); padding: 8px; border-radius: 6px; overflow-x: auto; }
+/* long unbroken tokens (URLs, paths) wrap instead of overflowing the viewport */
+.prompt-body, .plan-body, .plan-full, .trio .prompt, .vibe .prompt { overflow-wrap: anywhere; }
 details.agentlog pre {
   background: #000; color: #9fef9f;
   border-radius: 6px; padding: 10px;
@@ -499,6 +501,7 @@ details.agentlog pre {
 .pane-head { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; min-height: 30px; }
 .pane-head h2 { margin: 0; flex: 1; }
 .preview-wrap {
+  position: relative;
   height: 72vh;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -511,6 +514,10 @@ iframe.preview {
   border: 0;
   transform-origin: 0 0;
 }
+/* fitPreview may scale this iframe to the app's natural width via transform;
+   a transform doesn't shrink the layout box, so absolute-position it to keep
+   that oversized box clipped by .preview-wrap instead of widening the page. */
+.preview-wrap > iframe.preview { position: absolute; top: 0; left: 0; }
 /* Vibe Check uses bare iframes */
 .split > section > iframe.preview { border: 1px solid var(--border); border-radius: 8px; }
 .preview-empty {
@@ -611,4 +618,13 @@ pre.blob {
   padding: 8px 14px;
   font-size: 12px;
   margin-bottom: 14px;
+}
+
+/* phones: reclaim horizontal space and drop the decorative topbar tagline */
+@media (max-width: 600px) {
+  main { padding: 16px 12px; }
+  .topbar { padding: 10px 14px; gap: 10px; }
+  .tagline { display: none; }
+  .tabs a { padding: 6px 11px; }
+  h1 { font-size: 20px; }
 }
