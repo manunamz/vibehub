@@ -82,8 +82,6 @@ $ npm run build:site    # boots a demo server, snapshots it to ./dist
 
 `build:site` runs the app in demo mode — seeding `data-demo/` from the committed `demo/` bundles — and exports every page: timelines, diffs, prompt history, branches with read-only Vibe Checks, and app previews at every commit. Point any static host at `dist/`.
 
-The **`net`** branch ships a `netlify.toml` that runs this on deploy, so the demo lives only on `net`. `main` stays clean — `data/` is gitignored and self-seeds empty, so a fresh clone is a blank instance.
-
 ## Config
 
 | env var | default | meaning |
